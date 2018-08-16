@@ -1,0 +1,27 @@
+{
+  "name": "order-manager",
+  "version": "0.1.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "start": "react-static start",
+    "stage": "react-static build --staging",
+    "build": "react-static build",
+    "serve": "serve dist -p 3000",
+    "deploy": "firebase deploy",
+    "deploy-functions": "firebase deploy --only functions",
+    "deploy-hosting": "firebase deploy --only hosting"
+  },
+  "dependencies": {
+    "@material-ui/core": "^1.5.0",
+    "firebase": "^5.3.1",
+    "react-firebaseui": "^3.0.6",
+    "react-flip-toolkit": "^4.0.2",
+    "react-static": "^5.9.7",
+    "recompose": "^0.28.2"
+  },
+  "devDependencies": {
+    "eslint-config-react-tools": "^1.1.6",
+    "serve": "^9.6.0"
+  }
+}

@@ -1,0 +1,20 @@
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function hasAccess() {
+      return request.auth.token.hasAccess == true;
+    }
+
+    function isLoggedIn() {
+      return request.auth.uid != null;
+    }
+
+    match /users/{user} {
+      allow read, write: if request.auth.uid == user;
+    }
+
+    match /orders/{order} {
+      allow read: if true;
+      allow write: if (isLoggedIn() && hasAccess());
+    }
+  }
+}
