@@ -9,12 +9,8 @@ import CardMedia from '@material-ui/core/CardMedia'
 import CardContent from '@material-ui/core/CardContent'
 import CardActions from '@material-ui/core/CardActions'
 import Button from '@material-ui/core/Button'
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
 import { compose } from 'recompose'
+import YesNoDialog from '../components/YesNoDialog'
 
 import withAuthorization from '../session/withAuthorization'
 
@@ -70,16 +66,7 @@ class Account extends React.Component {
               <Button variant="contained" color="primary" onClick={() => auth.signOut()}>Sign Out</Button>
               <Button variant="outlined" onClick={this.handleDeleteClick}>Delete Account</Button>
             </CardActions>
-            <Dialog open={dialogOpen}>
-              <DialogTitle>Delete account?</DialogTitle>
-              <DialogContent>
-                <DialogContentText>Are you sure you want to delete your account? You will no longer be able to view your order dashboard.</DialogContentText>
-              </DialogContent>
-              <DialogActions>
-                <Button onClick={this.handleNo} autoFocus>No</Button>
-                <Button onClick={this.handleYes}>Yes, delete my account</Button>
-              </DialogActions>
-            </Dialog>
+            <YesNoDialog open={dialogOpen} title="Delete account?" message="Are you sure you want to delete your account? You will no longer be able to accesss your order dashboard." noText="No" yesText="Yes, delete my account" onNo={this.handleNo} onYes={this.handleYes} />
           </Card>
         </Grid>
       </Grid>

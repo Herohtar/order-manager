@@ -9,11 +9,14 @@ import Drawer from '@material-ui/core/Drawer'
 import MenuList from '@material-ui/core/MenuList'
 import MenuItem from '@material-ui/core/MenuItem'
 import ListItemText from '@material-ui/core/ListItemText'
+import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction'
 import Checkbox from '@material-ui/core/Checkbox'
 import Icon from '@material-ui/core/Icon'
+import IconButton from '@material-ui/core/IconButton'
 import Typography from '@material-ui/core/Typography'
 import OrderCard from '../components/OrderCard'
 import { Flipper, Flipped } from 'react-flip-toolkit'
+import YesNoDialog from '../components/YesNoDialog'
 
 const styles = theme => ({
   root: {
@@ -21,7 +24,7 @@ const styles = theme => ({
   },
   drawerPaper: {
     position: 'relative',
-    width: 240,
+    width: 275,
     height: 'calc(100vh - 48px)',
   },
   content: {
@@ -38,6 +41,9 @@ class Dashboard extends React.Component {
     this.state = {
       orders: [],
       selectedOrder: null,
+      dialogOpen: false,
+      dialogMessage: '',
+      orderToDelete: null,
     }
   }
 
@@ -82,9 +88,24 @@ class Dashboard extends React.Component {
     this.setState(() => ({ selectedOrder: order }))
   }
 
+  handleDeleteClick = order => e => {
+    const dialogMessage = `Are you sure you want to delete the order from ${order.name}?`
+    this.setState(() => ({ dialogOpen: true, dialogMessage, orderToDelete: order.id }))
+  }
+
+  handleNo = () => {
+    this.setState(() => ({ dialogOpen: false, orderToDelete: null }))
+  }
+
+  handleYes = () => {
+    const { orderToDelete } = this.state
+    firestore.collection('orders').doc(orderToDelete).delete()
+    this.setState(() => ({ dialogOpen: false, orderToDelete: null }))
+  }
+
   render () {
     const { classes } = this.props
-    const { orders, selectedOrder } = this.state
+    const { orders, selectedOrder, dialogOpen, dialogMessage } = this.state
 
     return (
       <div className={classes.root}>
@@ -106,6 +127,11 @@ class Dashboard extends React.Component {
                       disableRipple
                     />
                     <ListItemText primary={order.name} secondary={order.email} />
+                    <ListItemSecondaryAction>
+                      <IconButton onClick={this.handleDeleteClick(order)}>
+                        <Icon>delete</Icon>
+                      </IconButton>
+                    </ListItemSecondaryAction>
                   </MenuItem>
                 </Flipped>
               ))}
@@ -121,6 +147,7 @@ class Dashboard extends React.Component {
             <Typography variant="body1">No order selected.</Typography>
           </div>
         }
+        <YesNoDialog open={dialogOpen} title="Delete order?" message={dialogMessage} onNo={this.handleNo} onYes={this.handleYes} />
       </div>
     )
   }
