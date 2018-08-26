@@ -12,6 +12,11 @@ service cloud.firestore {
       allow read, write: if request.auth.uid == user;
     }
 
+    match /refreshTokens/{user} {
+      allow read: if request.auth.uid == user;
+      allow write: if false;
+    }
+
     match /orders/{order} {
       allow read: if (isLoggedIn() && hasAccess());
       allow write: if (isLoggedIn() && hasAccess());

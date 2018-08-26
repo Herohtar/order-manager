@@ -36,14 +36,14 @@ class Account extends React.Component {
     this.setState(() => ({ dialogOpen: false }))
   }
 
-  handleYes = async () => {
-    await this.deleteAccount(this.props.authUser)
+  handleYes = () => {
+    this.deleteAccount(this.props.authUser)
     this.setState(() => ({dialogOpen: false }))
   }
 
   deleteAccount = async (authUser) => {
     await firestore.collection('users').doc(authUser.uid).delete()
-    await auth.currentUser.delete()
+    auth.currentUser.delete()
   }
 
   render() {
@@ -66,7 +66,7 @@ class Account extends React.Component {
               <Button variant="contained" color="primary" onClick={() => auth.signOut()}>Sign Out</Button>
               <Button variant="outlined" onClick={this.handleDeleteClick}>Delete Account</Button>
             </CardActions>
-            <YesNoDialog open={dialogOpen} title="Delete account?" message="Are you sure you want to delete your account? You will no longer be able to accesss your order dashboard." noText="No" yesText="Yes, delete my account" onNo={this.handleNo} onYes={this.handleYes} />
+            <YesNoDialog open={dialogOpen} title="Delete account?" message="Are you sure you want to delete your account? You will be signed out and will no longer have accesss to your order dashboard." noText="No" yesText="Yes, delete my account" onNo={this.handleNo} onYes={this.handleYes} />
           </Card>
         </Grid>
       </Grid>

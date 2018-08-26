@@ -34,10 +34,12 @@ exports.assignUserClaims = functions.auth.user().onCreate(user => {
           getEmails: userPermissions.getEmails,
         };
 
-        return admin.auth().setCustomUserClaims(user.uid, customClaims)
-          .catch(error => {
-            console.log(error);
-          })
+        return admin.auth().setCustomUserClaims(user.uid, customClaims).then(() =>
+          firestore.collection('refreshTokens').doc(user.uid).set({ refreshTime: admin.firestore.Timestamp.now() })
+        )
+        .catch(error => {
+          console.log(error);
+        })
       }
 
       return false;

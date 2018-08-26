@@ -1,7 +1,7 @@
 import React from 'react'
 
 import AuthUserContext from './AuthUserContext';
-import { auth } from '../firebase'
+import { auth, firestore } from '../firebase'
 
 const withAuthentication = Component => {
   class WithAuthentication extends React.Component {
@@ -14,14 +14,24 @@ const withAuthentication = Component => {
     }
 
     componentDidMount () {
-      this.unregisterAuthObserver = auth.onAuthStateChanged(authUser => (
-        authUser
-          ? this.setState(() => ({ authUser }))
-          : this.setState(() => ({ authUser: null }))
-      ))
+      this.unregisterAuthObserver = auth.onAuthStateChanged(authUser => {
+        if (this.unregisterTokenObserver) {
+          this.unregisterTokenObserver();
+        }
+
+        if (authUser) {
+          this.unregisterTokenObserver = firestore.collection('refreshTokens').doc(authUser.uid).onSnapshot(() => {
+            authUser.getIdToken(true);
+          })
+          this.setState(() => ({ authUser }));
+        } else {
+          this.setState(() => { authUser: null })
+        }
+      })
     }
 
     componentWillUnmount() {
+      this.unregisterTokenObserver();
       this.unregisterAuthObserver();
     }
 
