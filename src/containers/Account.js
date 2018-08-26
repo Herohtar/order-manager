@@ -36,8 +36,8 @@ class Account extends React.Component {
     this.setState(() => ({ dialogOpen: false }))
   }
 
-  handleYes = () => {
-    this.deleteAccount(this.props.authUser)
+  handleYes = async () => {
+    await this.deleteAccount(this.props.authUser)
     this.setState(() => ({dialogOpen: false }))
   }
 

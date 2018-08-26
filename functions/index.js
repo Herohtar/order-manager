@@ -23,21 +23,25 @@ const mailTransport = nodemailer.createTransport({
   }
 });
 
-exports.assignUserClaims = functions.auth.user().onCreate(async (user) => {
+exports.assignUserClaims = functions.auth.user().onCreate(user => {
   if (user.emailVerified) {
-    const userPermissions = (await firestore.collection('userPermissions').doc(user.email).get()).data;
-    if (userPermissions) {
-      const customClaims = {
-        admin: userPermissions.admin,
-        hasAccess: userPermissions.hasAccess,
-        getEmails: userPermissions.getEmails,
-      };
+    return firestore.collection('userPermissions').doc(user.email).get().then(userDoc => {
+      const userPermissions = userDoc.data();
+      if (userPermissions) {
+        const customClaims = {
+          admin: userPermissions.admin,
+          hasAccess: userPermissions.hasAccess,
+          getEmails: userPermissions.getEmails,
+        };
 
-      return admin.auth().setCustomUserClaims(user.uid, customClaims)
-        .catch(error => {
-          console.log(error);
-        })
-    }
+        return admin.auth().setCustomUserClaims(user.uid, customClaims)
+          .catch(error => {
+            console.log(error);
+          })
+      }
+
+      return false;
+    })
   }
 
   return false;
@@ -50,42 +54,43 @@ exports.sendOrderEmail = functions.firestore.document('orders/{orderId}').onCrea
   return sendOrderEmail(data);
 })
 
-async function getEmailsToNotify() {
-  const userList = await admin.auth().listUsers();
-  return userList.users.filter(user => user.customClaims.getEmails == true).map(user => `${user.displayName} <${user.email}>`);
+function getEmailsToNotify() {
+  return admin.auth().listUsers().then(result => result.users.filter(user => user.customClaims.getEmails == true).map(use => `${user.displayName} <${user.email}>`).join(','));
 }
 
 // Sends an order email
 function sendOrderEmail({name, email, delivery, address, products}) {
-  const mailOptions = {
-    from: `Grammy\'s Gluten Free Goodies <${functions.config().email.noreply}>`,
-    to: `Undisclosed Recipients <${functions.config().email.noreply}>`,
-    bcc: getEmailsToNotify().join(','),
-    subject: `New order from ${name}!`,
-  }
+  return getEmailsToNotify().then(emails => {
+    const mailOptions = {
+      from: `Grammy\'s Gluten Free Goodies <${functions.config().email.noreply}>`,
+      to: `Undisclosed Recipients <${functions.config().email.noreply}>`,
+      bcc: emails,
+      subject: `New order from ${name}!`,
+    }
 
-  var emailText = `Name: ${name}
-Email: ${email}
-Delivery: ${delivery}`
+    var emailText = `Name: ${name}
+  Email: ${email}
+  Delivery: ${delivery}`
 
-  if (delivery === 'yes') {
-    emailText = emailText.concat('\n', 'Address: ', address);
-  }
-  products.forEach(product => emailText = emailText.concat('\n', product.name, ': ', product.amount))
-  mailOptions.text = emailText
+    if (delivery === 'yes') {
+      emailText = emailText.concat('\n', 'Address: ', address);
+    }
+    products.forEach(product => emailText = emailText.concat('\n', product.name, ': ', product.amount))
+    mailOptions.text = emailText
 
-  var emailHtml = `<b>Name:</b> ${name}<br/>
-<b>Email:</b> ${email}<br/>
-<b>Delivery:</b> ${delivery}`
+    var emailHtml = `<b>Name:</b> ${name}<br/>
+  <b>Email:</b> ${email}<br/>
+  <b>Delivery:</b> ${delivery}`
 
-  if (delivery === 'yes') {
-    emailHtml = emailHtml.concat('<br/><b>', 'Address:</b> ', address);
-  }
-  products.forEach(product => emailHtml = emailHtml.concat('<br/><b>', product.name, ':</b> ', product.amount))
-  mailOptions.html = emailHtml
+    if (delivery === 'yes') {
+      emailHtml = emailHtml.concat('<br/><b>', 'Address:</b> ', address);
+    }
+    products.forEach(product => emailHtml = emailHtml.concat('<br/><b>', product.name, ':</b> ', product.amount))
+    mailOptions.html = emailHtml
 
-  return mailTransport.sendMail(mailOptions).then(() => {
-    return console.log('New order email sent.');
+    return mailTransport.sendMail(mailOptions).then(() => {
+      return console.log('New order email sent.');
+    })
   })
 }
 
