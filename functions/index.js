@@ -23,17 +23,21 @@ const mailTransport = nodemailer.createTransport({
   }
 });
 
-exports.assignUserClaims = functions.auth.user().onCreate(user => {
-  if ((user.email === functions.config().admin.email) && user.emailVerified) {
-    const customClaims = {
-      admin: true,
-      hasAccess: true
-    };
+exports.assignUserClaims = functions.auth.user().onCreate(async (user) => {
+  if (user.emailVerified) {
+    const userPermissions = (await firestore.collection('userPermissions').doc(user.email).get()).data;
+    if (userPermissions) {
+      const customClaims = {
+        admin: userPermissions.admin,
+        hasAccess: userPermissions.hasAccess,
+        getEmails: userPermissions.getEmails,
+      };
 
-    return admin.auth().setCustomUserClaims(user.uid, customClaims)
-      .catch(error => {
-        console.log(error);
-      })
+      return admin.auth().setCustomUserClaims(user.uid, customClaims)
+        .catch(error => {
+          console.log(error);
+        })
+    }
   }
 
   return false;
@@ -46,12 +50,17 @@ exports.sendOrderEmail = functions.firestore.document('orders/{orderId}').onCrea
   return sendOrderEmail(data);
 })
 
+async function getEmailsToNotify() {
+  const userList = await admin.auth().listUsers();
+  return userList.users.filter(user => user.customClaims.getEmails == true).map(user => `${user.displayName} <${user.email}>`);
+}
+
 // Sends an order email
 function sendOrderEmail({name, email, delivery, address, products}) {
   const mailOptions = {
-    from: 'Grammy\'s Gluten Free Goodies <no-reply@orders.herohtar.com>',
-    to: 'Undisclosed Recipients <no-reply@orders.herohtar.com>',
-    bcc: 'belac1186@gmail.com', //TODO: Get list of recipients from Firestore
+    from: `Grammy\'s Gluten Free Goodies <${functions.config().email.noreply}>`,
+    to: `Undisclosed Recipients <${functions.config().email.noreply}>`,
+    bcc: getEmailsToNotify().join(','),
     subject: `New order from ${name}!`,
   }
 

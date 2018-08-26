@@ -13,8 +13,12 @@ service cloud.firestore {
     }
 
     match /orders/{order} {
-      allow read: if true;
+      allow read: if (isLoggedIn() && hasAccess());
       allow write: if (isLoggedIn() && hasAccess());
+    }
+
+    match /userPermissions/{document=**} {
+      allow read, write: if false;
     }
   }
 }

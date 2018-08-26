@@ -142,8 +142,7 @@ class Dashboard extends React.Component {
           <OrderCard order={selectedOrder} />
           :
           <div className={classes.content}>
-            <Typography variant="display1">Dashboard</Typography>
-            <br/>
+            <Typography variant="display1" paragraph>Dashboard</Typography>
             <Typography variant="body1">No order selected.</Typography>
           </div>
         }
