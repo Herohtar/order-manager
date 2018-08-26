@@ -55,7 +55,7 @@ exports.sendOrderEmail = functions.firestore.document('orders/{orderId}').onCrea
 })
 
 function getEmailsToNotify() {
-  return admin.auth().listUsers().then(result => result.users.filter(user => user.customClaims.getEmails == true).map(use => `${user.displayName} <${user.email}>`).join(','));
+  return admin.auth().listUsers().then(result => result.users.filter(user => user.customClaims.getEmails == true).map(user => `${user.displayName} <${user.email}>`).join(','));
 }
 
 // Sends an order email
