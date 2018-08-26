@@ -21,10 +21,7 @@ const uiConfig = {
   callbacks: {
     signInSuccessWithAuthResult: (authResult) => {
       if (authResult.additionalUserInfo.isNewUser) {
-        firestore.collection('users').doc(authResult.user.uid).set({
-          username: authResult.user.displayName,
-          email: authResult.user.email
-        })
+
       }
     }
   },

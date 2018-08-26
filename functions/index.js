@@ -24,6 +24,8 @@ const mailTransport = nodemailer.createTransport({
 });
 
 exports.assignUserClaims = functions.auth.user().onCreate(user => {
+  firestore.collection('users').doc(user.uid).set({ name: user.displayName, email: user.email });
+
   if (user.emailVerified) {
     return firestore.collection('userPermissions').doc(user.email).get().then(userDoc => {
       const userPermissions = userDoc.data();
@@ -35,7 +37,7 @@ exports.assignUserClaims = functions.auth.user().onCreate(user => {
         };
 
         return admin.auth().setCustomUserClaims(user.uid, customClaims).then(() =>
-          firestore.collection('refreshTokens').doc(user.uid).set({ refreshTime: admin.firestore.Timestamp.now() })
+          firestore.collection('refreshTokens').doc(user.uid).set({ refreshTime: admin.firestore.FieldValue.serverTimestamp() })
         )
         .catch(error => {
           console.log(error);
@@ -47,6 +49,13 @@ exports.assignUserClaims = functions.auth.user().onCreate(user => {
   }
 
   return false;
+})
+
+exports.cleanUpUserData = functions.auth.user().onDelete(user => {
+  return Promise.all([
+    firestore.collection('users').doc(user.uid).delete(),
+    firestore.collection('refreshTokens').doc(user.uid).delete(),
+  ])
 })
 
 // Sends a notification email when a new order is created
@@ -112,7 +121,7 @@ orderApp.post('/create', (req, res) => {
     products: data.products,
     viewed: false,
     completed: false,
-    date: admin.firestore.Timestamp.now(),
+    date: admin.firestore.FieldValue.serverTimestamp(),
   }
   if (order.delivery === 'yes') {
     order.address = data.address

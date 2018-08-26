@@ -37,13 +37,8 @@ class Account extends React.Component {
   }
 
   handleYes = () => {
-    this.deleteAccount(this.props.authUser)
-    this.setState(() => ({dialogOpen: false }))
-  }
-
-  deleteAccount = async (authUser) => {
-    await firestore.collection('users').doc(authUser.uid).delete()
     auth.currentUser.delete()
+    this.setState(() => ({dialogOpen: false }))
   }
 
   render() {

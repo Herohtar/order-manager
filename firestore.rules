@@ -9,11 +9,16 @@ service cloud.firestore {
     }
 
     match /users/{user} {
-      allow read, write: if request.auth.uid == user;
+      allow get: if request.auth.uid == user;
+      allow list: if false;
+      allow create: if false;
+      allow update: if request.auth.uid == user;
+      allow delete: if false;
     }
 
     match /refreshTokens/{user} {
-      allow read: if request.auth.uid == user;
+      allow get: if request.auth.uid == user;
+      allow list: if false;
       allow write: if false;
     }
 
