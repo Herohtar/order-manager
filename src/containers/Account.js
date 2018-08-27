@@ -9,6 +9,8 @@ import CardMedia from '@material-ui/core/CardMedia'
 import CardContent from '@material-ui/core/CardContent'
 import CardActions from '@material-ui/core/CardActions'
 import Button from '@material-ui/core/Button'
+import Snackbar from '@material-ui/core/Snackbar'
+import Icon from '@material-ui/core/Icon'
 import { compose } from 'recompose'
 import YesNoDialog from '../components/YesNoDialog'
 
@@ -26,6 +28,16 @@ const styles = theme => ({
 class Account extends React.Component {
   state = {
     dialogOpen: false,
+    error: false,
+    errorMessage: null,
+  }
+
+  handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return
+    }
+
+    this.setState({ error: false })
   }
 
   handleDeleteClick = () => {
@@ -37,13 +49,15 @@ class Account extends React.Component {
   }
 
   handleYes = () => {
-    auth.currentUser.delete()
+    auth.currentUser.delete().catch(error =>
+      this.setState(() => ({ error: true, errorMessage: error.message }))
+    )
     this.setState(() => ({dialogOpen: false }))
   }
 
   render() {
     const { authData, classes } = this.props
-    const { dialogOpen } = this.state
+    const { dialogOpen, error, errorMessage } = this.state
 
     return (
       <Grid container justify="center" className={classes.root}>
@@ -64,6 +78,7 @@ class Account extends React.Component {
             <YesNoDialog open={dialogOpen} title="Delete account?" message="Are you sure you want to delete your account? You will be signed out and will no longer have accesss to your order dashboard." noText="No" yesText="Yes, delete my account" onNo={this.handleNo} onYes={this.handleYes} />
           </Card>
         </Grid>
+        <Snackbar anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }} open={error} onClose={this.handleClose} autoHideDuration={5000} message={errorMessage} action={<Icon color="error">error_outline</Icon>} />
       </Grid>
     )
   }

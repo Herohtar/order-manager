@@ -157,7 +157,7 @@ const authCondition = async authUser => {
     return false;
   }
 
-  const token = await authData.authUser.getIdTokenResult();
+  const token = await authUser.getIdTokenResult();
   return token.claims.hasAccess === true;
 }
 

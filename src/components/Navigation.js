@@ -12,17 +12,17 @@ const Navigation = () => (
     {
       authData => (
         <Route path="*" render={({ location }) => (
-          (authData.authUser && (authData.accountStatus === 'authorized')) ? <NavigationAuth location={location} /> : <NavigationNonAuth />
+          authData.authUser ? <NavigationAuth location={location} authorized={authData.accountStatus === 'authorized'} /> : <NavigationNonAuth />
         )} />
       )
     }
   </AuthDataContext.Consumer>
 )
 
-const NavigationAuth = ({ location }) => (
+const NavigationAuth = ({ location, authorized }) => (
   <Tabs value={cleanPath(location.pathname)} component="nav">
     <Tab component={Link} value={cleanPath(routes.HOME)} exact to={routes.HOME} label="Home" />
-    <Tab component={Link} value={cleanPath(routes.DASHBOARD)} to={routes.DASHBOARD} label="Dashboard" />
+    {authorized && <Tab component={Link} value={cleanPath(routes.DASHBOARD)} to={routes.DASHBOARD} label="Dashboard" />}
     <Tab component={Link} value={cleanPath(routes.ACCOUNT)} to={routes.ACCOUNT} label="Account" />
   </Tabs>
 )

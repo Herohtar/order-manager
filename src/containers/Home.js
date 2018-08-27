@@ -36,15 +36,21 @@ export default withStyles(styles)(({ classes }) => (
         <SiteData render={({title}) => (
             <Head title={title} />
         )} />
-        <Typography variant="display1" paragraph>Welcome!</Typography>
+        { authData.accountStatus ?
+          <Typography variant="display1" paragraph>Welcome!</Typography>
+          :
+          <Typography variant="display1" paragraph>Logging in...</Typography>
+        }
         {
-          ((authData.accountStatus === 'authorized') && <Typography variant="body1">To view orders please visit your <Link to="/dashboard">dashboard</Link>.</Typography>)
-          ||
-          ((authData.accountStatus === 'unauthorized') && <Typography variant="body1">It seems your account does not belong to an authorized user. If this is incorrect, please contact the site admin.</Typography>)
-          ||
-          ((authData.accountStatus === 'pending') && <Typography variant="body1">Please wait while your account is being set up.</Typography>)
-          ||
-          <Typography variant="body1">An unknown error has occurred. If you keep seeing this message, please contact the site admin.</Typography>
+          authData.accountStatus && (
+            ((authData.accountStatus === 'authorized') && <Typography variant="body1">To view orders please visit your <Link to="/dashboard">dashboard</Link>.</Typography>)
+            ||
+            ((authData.accountStatus === 'unauthorized') && <Typography variant="body1">It seems your account does not belong to an authorized user. If this is incorrect, please contact the site admin.</Typography>)
+            ||
+            ((authData.accountStatus === 'pending') && <Typography variant="body1">Please wait while your account is being set up.</Typography>)
+            ||
+            <Typography variant="body1">An unknown error has occurred. If you keep seeing this message, please contact the site admin.</Typography>
+          )
         }
       </div>
       :
