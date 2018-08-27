@@ -1,7 +1,7 @@
 import React from 'react'
 import { withRouter } from 'react-static'
 
-import AuthUserContext from './AuthUserContext';
+import AuthDataContext from './AuthDataContext';
 import { auth } from '../firebase'
 
 const withAuthorization = condition => Component => {
@@ -20,11 +20,11 @@ const withAuthorization = condition => Component => {
 
     render () {
       return (
-        <AuthUserContext.Consumer>
+        <AuthDataContext.Consumer>
           {
-            authUser => authUser ? <Component authUser={authUser} {...this.props} /> : null
+            authData => authData.authUser ? <Component authData={authData} {...this.props} /> : null
           }
-        </AuthUserContext.Consumer>
+        </AuthDataContext.Consumer>
       )
     }
   }

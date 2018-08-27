@@ -1,22 +1,22 @@
 import React from 'react'
 import { Route, Link, cleanPath } from 'react-static'
 
-import AuthUserContext from '../session/AuthUserContext'
+import AuthDataContext from '../session/AuthDataContext'
 import Tabs from '@material-ui/core/Tabs'
 import Tab from '@material-ui/core/Tab'
 
 import * as routes from '../constants/routes'
 
 const Navigation = () => (
-  <AuthUserContext.Consumer>
+  <AuthDataContext.Consumer>
     {
-      authUser => (
+      authData => (
         <Route path="*" render={({ location }) => (
-          authUser ? <NavigationAuth location={location} /> : <NavigationNonAuth />
+          (authData.authUser && (authData.accountStatus === 'authorized')) ? <NavigationAuth location={location} /> : <NavigationNonAuth />
         )} />
       )
     }
-  </AuthUserContext.Consumer>
+  </AuthDataContext.Consumer>
 )
 
 const NavigationAuth = ({ location }) => (

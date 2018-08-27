@@ -23,10 +23,12 @@ const mailTransport = nodemailer.createTransport({
   }
 });
 
-exports.assignUserClaims = functions.auth.user().onCreate(user => {
+exports.initializeUserData = functions.auth.user().onCreate(user => {
+  const verified = user.emailVerified;
   firestore.collection('users').doc(user.uid).set({ name: user.displayName, email: user.email });
+  firestore.collection('userTokens').doc(user.uid).set({ accountStatus: verified ? 'pending' : 'unverified' });
 
-  if (user.emailVerified) {
+  if (verified) {
     return firestore.collection('userPermissions').doc(user.email).get().then(userDoc => {
       const userPermissions = userDoc.data();
       if (userPermissions) {
@@ -37,24 +39,24 @@ exports.assignUserClaims = functions.auth.user().onCreate(user => {
         };
 
         return admin.auth().setCustomUserClaims(user.uid, customClaims).then(() =>
-          firestore.collection('refreshTokens').doc(user.uid).set({ refreshTime: admin.firestore.FieldValue.serverTimestamp() })
+          firestore.collection('userTokens').doc(user.uid).update({ accountStatus: 'authorized' })
         )
         .catch(error => {
           console.log(error);
         })
       }
 
-      return false;
+      return firestore.collection('userTokens').doc(user.uid).update({ accountStatus: 'unauthorized' })
     })
   }
 
-  return false;
+  return true;
 })
 
-exports.cleanUpUserData = functions.auth.user().onDelete(user => {
+exports.removeUserData = functions.auth.user().onDelete(user => {
   return Promise.all([
     firestore.collection('users').doc(user.uid).delete(),
-    firestore.collection('refreshTokens').doc(user.uid).delete(),
+    firestore.collection('userTokens').doc(user.uid).delete(),
   ])
 })
 

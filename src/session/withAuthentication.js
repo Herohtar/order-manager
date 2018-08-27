@@ -1,6 +1,6 @@
 import React from 'react'
 
-import AuthUserContext from './AuthUserContext';
+import AuthDataContext from './AuthDataContext';
 import { auth, firestore } from '../firebase'
 
 const withAuthentication = Component => {
@@ -10,6 +10,7 @@ const withAuthentication = Component => {
 
       this.state = {
         authUser: null,
+        accountStatus: null,
       }
     }
 
@@ -20,12 +21,16 @@ const withAuthentication = Component => {
         }
 
         if (authUser) {
-          this.unregisterTokenObserver = firestore.collection('refreshTokens').doc(authUser.uid).onSnapshot(() => {
-            authUser.getIdToken(true);
+          this.unregisterTokenObserver = firestore.collection('userTokens').doc(authUser.uid).onSnapshot(async (tokens) => {
+            accountStatus = tokens.data().accountStatus
+            if (accountStatus === 'authorized') {
+              await authUser.getIdToken(true);
+            }
+            this.setState(() => ({ authUser, accountStatus }))
           })
           this.setState(() => ({ authUser }));
         } else {
-          this.setState(() => ({ authUser: null }));
+          this.setState(() => ({ authUser: null, accountStatus: null }));
         }
       })
     }
@@ -36,12 +41,12 @@ const withAuthentication = Component => {
     }
 
     render () {
-      const { authUser } = this.state;
+      const { authUser, accountStatus } = this.state;
 
       return (
-        <AuthUserContext.Provider value={authUser}>
+        <AuthDataContext.Provider value={{ authUser, accountStatus }}>
           <Component {...this.props} />
-        </AuthUserContext.Provider>
+        </AuthDataContext.Provider>
       )
     }
   }

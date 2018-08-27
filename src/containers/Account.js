@@ -42,7 +42,7 @@ class Account extends React.Component {
   }
 
   render() {
-    const { authUser, classes } = this.props
+    const { authData, classes } = this.props
     const { dialogOpen } = this.state
 
     return (
@@ -52,10 +52,10 @@ class Account extends React.Component {
         )} />
         <Grid item xs={4}>
           <Card>
-            <CardMedia image={authUser.photoURL} className={classes.media} />
+            <CardMedia image={authData.authUser.photoURL} className={classes.media} />
             <CardContent>
-              <Typography variant="headline">Name: {authUser.displayName}</Typography>
-              <Typography variant="headline">Email: {authUser.email}</Typography>
+              <Typography variant="headline">Name: {authData.authUser.displayName}</Typography>
+              <Typography variant="headline">Email: {authData.authUser.email}</Typography>
             </CardContent>
             <CardActions>
               <Button variant="contained" color="primary" onClick={() => auth.signOut()}>Sign Out</Button>

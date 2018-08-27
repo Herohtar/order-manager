@@ -16,7 +16,7 @@ service cloud.firestore {
       allow delete: if false;
     }
 
-    match /refreshTokens/{user} {
+    match /userTokens/{user} {
       allow get: if request.auth.uid == user;
       allow list: if false;
       allow write: if false;
