@@ -13,7 +13,7 @@
     "deploy-hosting": "firebase deploy --only hosting"
   },
   "dependencies": {
-    "@material-ui/core": "^1.5.0",
+    "@material-ui/core": "^3.0.0",
     "firebase": "^5.4.1",
     "react-firebaseui": "^3.0.6",
     "react-flip-toolkit": "^4.0.2",
