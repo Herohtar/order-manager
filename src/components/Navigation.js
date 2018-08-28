@@ -7,30 +7,39 @@ import Tab from '@material-ui/core/Tab'
 
 import * as routes from '../constants/routes'
 
+const ConditionalTab = async ({ condition, data, path, label }) => {
+  return (await condition(data)) && <Tab component={Link} value={cleanPath(path)} to={path} label={label} />
+}
+
+const dashboardCondition = async (authUser) => {
+  const token = await authUser.getIdTokenResult()
+  return (token.claims.hasAccess === true)
+}
+
+const accountCondition = authUser => {
+  return !!authUser
+}
+
+const adminCondition = authUser => {
+  const token = await authUser.getIdTokenResult()
+  return (token.claims.admin === true)
+}
+
 const Navigation = () => (
   <AuthDataContext.Consumer>
     {
       authData => (
         <Route path="*" render={({ location }) => (
-          authData.authUser ? <NavigationAuth location={location} authorized={authData.accountStatus === 'authorized'} /> : <NavigationNonAuth />
+          <Tabs value={cleanPath(location.pathname)} component="nav">
+            <Tab component={Link} value={cleanPath(routes.HOME)} exact to={routes.HOME} label="Home" />
+            <ConditionalTab condition={dashboardCondition} data={authData.authUser} path={routes.DASHBOARD} label="Dashboard" />
+            <ConditionalTab condition={accountCondition} data={authData.authUser} path={routes.ACCOUNT} label="Account" />
+            <ConditionalTab condition={adminCondition} data={authData.authUser} path={routes.ADMIN} label="Admin" />
+          </Tabs>
         )} />
       )
     }
   </AuthDataContext.Consumer>
-)
-
-const NavigationAuth = ({ location, authorized }) => (
-  <Tabs value={cleanPath(location.pathname)} component="nav">
-    <Tab component={Link} value={cleanPath(routes.HOME)} exact to={routes.HOME} label="Home" />
-    {authorized && <Tab component={Link} value={cleanPath(routes.DASHBOARD)} to={routes.DASHBOARD} label="Dashboard" />}
-    <Tab component={Link} value={cleanPath(routes.ACCOUNT)} to={routes.ACCOUNT} label="Account" />
-  </Tabs>
-)
-
-const NavigationNonAuth = ({ location }) => (
-  <Tabs value={routes.HOME} component="nav">
-    <Tab component={Link} value={routes.HOME} exact to={routes.HOME} label="Home" />
-  </Tabs>
 )
 
 export default Navigation

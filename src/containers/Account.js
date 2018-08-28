@@ -68,6 +68,7 @@ class Account extends React.Component {
           <Card>
             <CardMedia image={authData.authUser.photoURL} className={classes.media} />
             <CardContent>
+              {(authData.accountStatus === 'pending') && <Typography variant="headline" paragraph>Account setup pending.</Typography>}
               <Typography variant="headline">Name: {authData.authUser.displayName}</Typography>
               <Typography variant="headline">Email: {authData.authUser.email}</Typography>
             </CardContent>
