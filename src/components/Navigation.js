@@ -7,9 +7,12 @@ import Tab from '@material-ui/core/Tab'
 
 import * as routes from '../constants/routes'
 
-const ConditionalTab = ({ condition, data, path, label }) => {
-  return condition(data) && <Tab component={Link} value={cleanPath(path)} to={path} label={label} />
-}
+const ConditionalTab = ({ condition, data, path, label }) => (
+  condition(data) ?
+    <Tab component={Link} value={cleanPath(path)} to={path} label={label} />
+    :
+    null
+)
 
 const dashboardCondition = authToken => {
   return !!authToken && (authToken.claims.hasAccess === true)
