@@ -16,7 +16,7 @@ const withAuthentication = Component => {
     }
 
     componentDidMount () {
-      this.unregisterAuthObserver = auth.onAuthStateChanged(authUser => {
+      this.unregisterAuthObserver = auth.onAuthStateChanged(async (authUser) => {
         if (this.unregisterTokenObserver) {
           this.unregisterTokenObserver();
         }
@@ -24,13 +24,13 @@ const withAuthentication = Component => {
         if (authUser) {
           this.unregisterTokenObserver = firestore.collection('userTokens').doc(authUser.uid).onSnapshot(async (tokens) => {
             const accountStatus = tokens.get('accountStatus')
-            let token = null;
-            if (accountStatus === 'ready') {
-              token = await authUser.getIdTokenResult(true);
-            }
+            const forceRefresh = accountStatus === 'ready';
+            const token = await authUser.getIdTokenResult(forceRefresh);
             this.setState(() => ({ authUser, accountStatus, token }))
           })
-          this.setState(() => ({ authUser }));
+
+          const token = await authUser.getIdTokenResult();
+          this.setState(() => ({ authUser, token }));
         } else {
           this.setState(() => ({ authUser: null, accountStatus: null, token: null }));
         }
