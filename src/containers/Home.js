@@ -36,7 +36,7 @@ const AccountMessage = ({ authData }) => {
     case 'pending':
       return <Typography variant="body1">Please wait while your account is being set up.</Typography>
     case 'ready':
-      return token.claims.hasAccess ?
+      return (!!token && token.claims.hasAccess) ?
         <Typography variant="body1">To view orders please visit your <Link to="/dashboard">dashboard</Link>.</Typography>
         :
         <Typography variant="body1">It seems your account does not belong to an authorized user. If this is incorrect, please contact the site admin.</Typography>

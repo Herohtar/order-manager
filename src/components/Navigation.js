@@ -12,7 +12,7 @@ const ConditionalTab = ({ condition, data, path, label }) => {
 }
 
 const dashboardCondition = authToken => {
-  return (authToken.claims.hasAccess === true)
+  return !!authToken && (authToken.claims.hasAccess === true)
 }
 
 const accountCondition = authUser => {
@@ -20,7 +20,7 @@ const accountCondition = authUser => {
 }
 
 const adminCondition = authToken => {
-  return (authToken.claims.admin === true)
+  return !!authToken && (authToken.claims.admin === true)
 }
 
 const Navigation = () => (
