@@ -29,26 +29,24 @@ exports.initializeUserData = functions.auth.user().onCreate(user => {
   const userRef = firestore.collection('users').doc(user.uid);
   const permissionsRef = firestore.collection('userPermissions').doc(user.email);
 
-  return firestore.runTransaction(transaction => {
-    return transaction.get(permissionsRef).then(permissionsDoc => {
+  return firestore.runTransaction(transaction =>
+    transaction.get(permissionsRef).then(permissionsDoc => {
       transaction.set(tokenRef, { accountStatus: 'pending' });
       transaction.set(userRef, { name: user.displayName, email: user.email, getEmails: true });
-      
+
       const permissions = permissionsDoc.data();
       if (permissions) {
         const customClaims = {
           admin: permissions.admin,
           hasAccess: permissions.hasAccess,
         };
-        
-        admin.auth().setCustomUserClaims(user.uid, customClaims).then(() =>
-          transaction.update(tokenRef, { accountStatus: 'ready', refreshTime: admin.firestore.FieldValue.serverTimestamp() })
-        )
-      } else {
-        transaction.update(tokenRef, { accountStatus: 'ready', refreshTime: admin.firestore.FieldValue.serverTimestamp() });
+
+        return admin.auth().setCustomUserClaims(user.uid, customClaims).then(() => transaction.update(tokenRef, { accountStatus: 'ready', refreshTime: admin.firestore.FieldValue.serverTimestamp() }));
       }
-    });
-  });
+
+      transaction.update(tokenRef, { accountStatus: 'ready', refreshTime: admin.firestore.FieldValue.serverTimestamp() });
+    })
+  );
 })
 
 exports.removeUserData = functions.auth.user().onDelete(user => {
