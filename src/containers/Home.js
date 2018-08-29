@@ -28,15 +28,14 @@ const uiConfig = {
   credentialHelper: 'none'
 }
 
-const AccountMessage = async ({ authData }) => {
-  const { authUser, accountStatus } = authData
+const AccountMessage = ({ authData }) => {
+  const { accountStatus, token } = authData
   switch (accountStatus) {
     case null:
       return null
     case 'pending':
       return <Typography variant="body1">Please wait while your account is being set up.</Typography>
     case 'ready':
-      const token = await authUser.getIdTokenResult()
       return token.claims.hasAccess ?
         <Typography variant="body1">To view orders please visit your <Link to="/dashboard">dashboard</Link>.</Typography>
         :

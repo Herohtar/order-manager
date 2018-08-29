@@ -11,6 +11,7 @@ const withAuthentication = Component => {
       this.state = {
         authUser: null,
         accountStatus: null,
+        token: null,
       }
     }
 
@@ -23,14 +24,15 @@ const withAuthentication = Component => {
         if (authUser) {
           this.unregisterTokenObserver = firestore.collection('userTokens').doc(authUser.uid).onSnapshot(async (tokens) => {
             const accountStatus = tokens.get('accountStatus')
+            let token = null;
             if (accountStatus === 'ready') {
-              await authUser.getIdToken(true);
+              token = await authUser.getIdTokenResult(true);
             }
-            this.setState(() => ({ authUser, accountStatus }))
+            this.setState(() => ({ authUser, accountStatus, token }))
           })
           this.setState(() => ({ authUser }));
         } else {
-          this.setState(() => ({ authUser: null, accountStatus: null }));
+          this.setState(() => ({ authUser: null, accountStatus: null, token: null }));
         }
       })
     }
@@ -41,10 +43,10 @@ const withAuthentication = Component => {
     }
 
     render () {
-      const { authUser, accountStatus } = this.state;
+      const { authUser, accountStatus, token } = this.state;
 
       return (
-        <AuthDataContext.Provider value={{ authUser, accountStatus }}>
+        <AuthDataContext.Provider value={{ authUser, accountStatus, token }}>
           <Component {...this.props} />
         </AuthDataContext.Provider>
       )

@@ -7,22 +7,20 @@ import Tab from '@material-ui/core/Tab'
 
 import * as routes from '../constants/routes'
 
-const ConditionalTab = async ({ condition, data, path, label }) => {
-  return (await condition(data)) && <Tab component={Link} value={cleanPath(path)} to={path} label={label} />
+const ConditionalTab = ({ condition, data, path, label }) => {
+  return condition(data) && <Tab component={Link} value={cleanPath(path)} to={path} label={label} />
 }
 
-const dashboardCondition = async (authUser) => {
-  const token = await authUser.getIdTokenResult()
-  return (token.claims.hasAccess === true)
+const dashboardCondition = authToken => {
+  return (authToken.claims.hasAccess === true)
 }
 
 const accountCondition = authUser => {
   return !!authUser
 }
 
-const adminCondition = authUser => {
-  const token = await authUser.getIdTokenResult()
-  return (token.claims.admin === true)
+const adminCondition = authToken => {
+  return (authToken.claims.admin === true)
 }
 
 const Navigation = () => (
@@ -32,9 +30,9 @@ const Navigation = () => (
         <Route path="*" render={({ location }) => (
           <Tabs value={cleanPath(location.pathname)} component="nav">
             <Tab component={Link} value={cleanPath(routes.HOME)} exact to={routes.HOME} label="Home" />
-            <ConditionalTab condition={dashboardCondition} data={authData.authUser} path={routes.DASHBOARD} label="Dashboard" />
+            <ConditionalTab condition={dashboardCondition} data={authData.token} path={routes.DASHBOARD} label="Dashboard" />
             <ConditionalTab condition={accountCondition} data={authData.authUser} path={routes.ACCOUNT} label="Account" />
-            <ConditionalTab condition={adminCondition} data={authData.authUser} path={routes.ADMIN} label="Admin" />
+            <ConditionalTab condition={adminCondition} data={authData.token} path={routes.ADMIN} label="Admin" />
           </Tabs>
         )} />
       )
