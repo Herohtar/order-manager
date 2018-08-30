@@ -7,42 +7,24 @@ import Tab from '@material-ui/core/Tab'
 
 import * as routes from '../constants/routes'
 
-const dashboardCondition = authToken => {
-  return !!authToken && (authToken.claims.hasAccess === true)
-}
-
-const accountCondition = authUser => {
-  return !!authUser
-}
-
-const adminCondition = authToken => {
-  return !!authToken && (authToken.claims.admin === true)
-}
+const getAvailableRoutes = authData => Object.values(routes).filter(route => route.condition(authData))
 
 const Navigation = () => (
   <AuthDataContext.Consumer>
     {
       authData => (
-        <Route path="*" render={({ location }) => (
-          <Tabs value={cleanPath(location.pathname)} component="nav">
-            <Tab component={Link} value={cleanPath(routes.HOME)} exact to={routes.HOME} label="Home" />
-            {dashboardCondition(authData.token) ?
-              <Tab component={Link} value={cleanPath(routes.DASHBOARD)} to={routes.DASHBOARD} label="Dashboard" />
-              :
-              null
-            }
-            {adminCondition(authData.token) ?
-              <Tab component={Link} value={cleanPath(routes.ADMIN)} to={routes.ADMIN} label="Admin" />
-              :
-              null
-            }
-            {accountCondition(authData.authUser) ?
-              <Tab component={Link} value={cleanPath(routes.ACCOUNT)} to={routes.ACCOUNT} label="Account" />
-              :
-              null
-            }
-          </Tabs>
-        )} />
+        <Route path="*" render={({ location }) => {
+          const availableRoutes = getAvailableRoutes(authData)
+          const routeIndex = availableRoutes.findIndex(route => cleanPath(route.path) === cleanPath(location.pathname))
+          
+          return (
+            <Tabs value={(routeIndex >= 0) ? routeIndex : false} component="nav">
+              {availableRoutes.map(({ exact, path, label }, index) => (
+                <Tab component={Link} value={index} exact={exact} to={path} label={label} />
+              ))}
+            </Tabs>
+          )
+        }} />
       )
     }
   </AuthDataContext.Consumer>

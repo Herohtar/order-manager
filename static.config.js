@@ -14,16 +14,16 @@ export default {
   getRoutes: async () => {
     return [
       {
-        path: routes.HOME,
-        component: 'src/containers/Home',
+        path: routes.Home.path,
+        component: routes.Home.component,
       },
       {
-        path: routes.DASHBOARD,
-        component: 'src/containers/Dashboard',
+        path: routes.Dashboard.path,
+        component: routes.Dashboard.component,
       },
       {
-        path: routes.ACCOUNT,
-        component: 'src/containers/Account',
+        path: routes.Account.path,
+        component: routes.Account.component,
       },
       {
         is404: true,
