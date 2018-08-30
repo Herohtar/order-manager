@@ -20,7 +20,7 @@ const Navigation = () => (
           return (
             <Tabs value={(routeIndex >= 0) ? routeIndex : false} component="nav">
               {availableRoutes.map(({ exact, path, label }, index) => (
-                <Tab component={Link} value={index} exact={exact} to={path} label={label} />
+                <Tab key={index} component={Link} value={index} exact={exact} to={path} label={label} />
               ))}
             </Tabs>
           )
