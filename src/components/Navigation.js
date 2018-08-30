@@ -7,30 +7,27 @@ import Tab from '@material-ui/core/Tab'
 
 import * as routes from '../constants/routes'
 
+const getAvailableRoutes = authData => Object.values(routes).filter(route => route.condition(authData))
+
 const Navigation = () => (
   <AuthDataContext.Consumer>
     {
       authData => (
-        <Route path="*" render={({ location }) => (
-          authData.authUser ? <NavigationAuth location={location} authorized={authData.accountStatus === 'authorized'} /> : <NavigationNonAuth />
-        )} />
+        <Route path="*" render={({ location }) => {
+          const availableRoutes = getAvailableRoutes(authData)
+          const routeIndex = availableRoutes.findIndex(route => cleanPath(route.path) === cleanPath(location.pathname))
+          
+          return (
+            <Tabs value={(routeIndex >= 0) ? routeIndex : false} component="nav">
+              {availableRoutes.map(({ exact, path, label }, index) => (
+                <Tab key={index} component={Link} value={index} exact={exact} to={path} label={label} />
+              ))}
+            </Tabs>
+          )
+        }} />
       )
     }
   </AuthDataContext.Consumer>
-)
-
-const NavigationAuth = ({ location, authorized }) => (
-  <Tabs value={cleanPath(location.pathname)} component="nav">
-    <Tab component={Link} value={cleanPath(routes.HOME)} exact to={routes.HOME} label="Home" />
-    {authorized && <Tab component={Link} value={cleanPath(routes.DASHBOARD)} to={routes.DASHBOARD} label="Dashboard" />}
-    <Tab component={Link} value={cleanPath(routes.ACCOUNT)} to={routes.ACCOUNT} label="Account" />
-  </Tabs>
-)
-
-const NavigationNonAuth = ({ location }) => (
-  <Tabs value={routes.HOME} component="nav">
-    <Tab component={Link} value={routes.HOME} exact to={routes.HOME} label="Home" />
-  </Tabs>
 )
 
 export default Navigation

@@ -24,33 +24,29 @@ const mailTransport = nodemailer.createTransport({
 });
 
 exports.initializeUserData = functions.auth.user().onCreate(user => {
-  const verified = user.emailVerified;
-  firestore.collection('users').doc(user.uid).set({ name: user.displayName, email: user.email });
-  firestore.collection('userTokens').doc(user.uid).set({ accountStatus: verified ? 'pending' : 'unverified' });
+  // Not checking if email is verified since only Google sign-in is enabled
+  const tokenRef = firestore.collection('userTokens').doc(user.uid);
+  const userRef = firestore.collection('users').doc(user.uid);
+  const permissionsRef = firestore.collection('userPermissions').doc(user.email);
 
-  if (verified) {
-    return firestore.collection('userPermissions').doc(user.email).get().then(userDoc => {
-      const userPermissions = userDoc.data();
-      if (userPermissions) {
+  return firestore.runTransaction(transaction =>
+    transaction.get(permissionsRef).then(permissionsDoc => {
+      transaction.set(tokenRef, { accountStatus: 'pending' });
+      transaction.set(userRef, { name: user.displayName, email: user.email, getEmails: true });
+
+      const permissions = permissionsDoc.data();
+      if (permissions) {
         const customClaims = {
-          admin: userPermissions.admin,
-          hasAccess: userPermissions.hasAccess,
-          getEmails: userPermissions.getEmails,
+          admin: permissions.admin,
+          hasAccess: permissions.hasAccess,
         };
 
-        return admin.auth().setCustomUserClaims(user.uid, customClaims).then(() =>
-          firestore.collection('userTokens').doc(user.uid).update({ accountStatus: 'authorized' })
-        )
-        .catch(error => {
-          console.log(error);
-        })
+        return admin.auth().setCustomUserClaims(user.uid, customClaims).then(() => transaction.update(tokenRef, { accountStatus: 'ready', refreshTime: admin.firestore.FieldValue.serverTimestamp() }));
       }
 
-      return firestore.collection('userTokens').doc(user.uid).update({ accountStatus: 'unauthorized' })
+      transaction.update(tokenRef, { accountStatus: 'ready', refreshTime: admin.firestore.FieldValue.serverTimestamp() });
     })
-  }
-
-  return true;
+  );
 })
 
 exports.removeUserData = functions.auth.user().onDelete(user => {
@@ -68,7 +64,7 @@ exports.sendOrderEmail = functions.firestore.document('orders/{orderId}').onCrea
 })
 
 function getEmailsToNotify() {
-  return admin.auth().listUsers().then(result => result.users.filter(user => user.customClaims.getEmails == true).map(user => `${user.displayName} <${user.email}>`).join(','));
+  return firestore.collection('users').where('getEmails', '==', true).get().then(results => results.docs.map(user => `${user.displayName} <${user.email}>`).join(','));
 }
 
 // Sends an order email
