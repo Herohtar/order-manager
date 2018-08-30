@@ -22,6 +22,10 @@ export default {
         component: routes.Dashboard.component,
       },
       {
+        path: routes.Admin.path,
+        component: routes.Admin.component,
+      },
+      {
         path: routes.Account.path,
         component: routes.Account.component,
       },

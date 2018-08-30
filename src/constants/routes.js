@@ -12,17 +12,17 @@ export const Dashboard = {
   component: 'src/containers/Dashboard',
   condition: authData => !!authData.token && (authData.token.claims.hasAccess === true),
 }
-export const Account = {
-  path: '/account',
-  exact: false,
-  label: 'Account',
-  component: 'src/containers/Account',
-  condition: authData => !!authData.authUser,
-}
 export const Admin = {
   path: '/admin',
   exact: false,
   label: 'Admin',
   component: 'src/containers/Admin',
   condition: authData => !!authData.token && (authData.token.claims.admin === true),
+}
+export const Account = {
+  path: '/account',
+  exact: false,
+  label: 'Account',
+  component: 'src/containers/Account',
+  condition: authData => !!authData.authUser,
 }
