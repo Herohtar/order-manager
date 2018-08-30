@@ -23,7 +23,7 @@ const withAuthentication = Component => {
 
         if (authUser) {
           this.unregisterTokenObserver = firestore.collection('userTokens').doc(authUser.uid).onSnapshot(async (tokens) => {
-            const accountStatus = tokens.get('accountStatus')
+            const accountStatus = tokens.get('accountStatus') || null
             const forceRefresh = (accountStatus === 'ready')
             const token = await authUser.getIdTokenResult(forceRefresh)
             this.setState(() => ({ authUser, accountStatus, token }))
