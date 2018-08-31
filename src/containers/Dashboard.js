@@ -141,7 +141,6 @@ class Dashboard extends React.Component {
                       disableRipple
                     />
                     <ListItemText
-                      disableTypography
                       primary={order.name}
                       primaryTypographyProps={{className: order.viewed ? classes.viewed : classes.unviewed}}
                       secondary={order.email}
