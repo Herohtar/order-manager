@@ -59,7 +59,8 @@ class Dashboard extends React.Component {
   }
 
   componentWillUnmount() {
-    this.unsubscribeOrdersChanged();
+    clearTimeout(this.setViewedTimeout)
+    this.unsubscribeOrdersChanged()
   }
 
   handleOrdersChanged = snapshot => {
@@ -92,9 +93,12 @@ class Dashboard extends React.Component {
   }
 
   handleOrderClick = order => e => {
+    clearTimeout(this.setViewedTimeout)
+
     if (!order.viewed) {
-      firestore.collection('orders').doc(order.id).update({ viewed: true })
+      this.setViewedTimeout = setTimeout(() => firestore.collection('orders').doc(order.id).update({ viewed: true }), 5000)
     }
+
     this.setState(() => ({ selectedOrder: order }))
   }
 
