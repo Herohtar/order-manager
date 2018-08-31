@@ -13,6 +13,8 @@ import Snackbar from '@material-ui/core/Snackbar'
 import Icon from '@material-ui/core/Icon'
 import { compose } from 'recompose'
 import YesNoDialog from '../components/YesNoDialog'
+import FormControlLabel from '@material-ui/core/FormControlLabel'
+import Checkbox from '@material-ui/core/Checkbox'
 
 import withAuthorization from '../session/withAuthorization'
 
@@ -30,6 +32,19 @@ class Account extends React.Component {
     dialogOpen: false,
     error: false,
     errorMessage: null,
+    getEmails: false,
+  }
+
+  componentDidMount() {
+    const { authData } = this.props
+    this.unsubscribeUserChanged = firestore.collection('users').doc(authData.authUser.uid).onSnapshot(doc => {
+      const getEmails = doc.get('getEmails')
+      this.setState(() => ({ getEmails }))
+    })
+  }
+
+  componentWillUnmount() {
+    this.unsubscribeUserChanged()
   }
 
   handleClose = (event, reason) => {
@@ -55,9 +70,14 @@ class Account extends React.Component {
     this.setState(() => ({dialogOpen: false }))
   }
 
+  handleGetEmailsChange = async (event) => {
+    const { authData } = this.props
+    await firestore.collection('users').doc(authData.authUser.uid).update({ getEmails: event.target.checked })
+  }
+
   render() {
     const { authData, classes } = this.props
-    const { dialogOpen, error, errorMessage } = this.state
+    const { dialogOpen, error, errorMessage, getEmails } = this.state
 
     return (
       <Grid container justify="center" className={classes.root}>
@@ -71,6 +91,11 @@ class Account extends React.Component {
               {(authData.accountStatus === 'pending') && <Typography variant="headline" paragraph>Account setup pending.</Typography>}
               <Typography variant="headline">Name: {authData.authUser.displayName}</Typography>
               <Typography variant="headline">Email: {authData.authUser.email}</Typography>
+              {(!!authData.token && (authData.token.claims.hasAccess || authData.token.claims.admin)) ?
+                <FormControlLabel control={<Checkbox checked={getEmails} onChange={this.handleGetEmailsChange()} value="getEmails" />} label="Get Emails" />
+                :
+                null
+              }
             </CardContent>
             <CardActions>
               <Button variant="contained" color="primary" onClick={() => auth.signOut()}>Sign Out</Button>
