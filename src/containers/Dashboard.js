@@ -92,6 +92,7 @@ class Dashboard extends React.Component {
   }
 
   handleOrderClick = order => e => {
+    firestore.collection('orders').doc(order.id).update({ viewed: true })
     this.setState(() => ({ selectedOrder: order }))
   }
 
