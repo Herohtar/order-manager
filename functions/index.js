@@ -32,19 +32,17 @@ exports.initializeUserData = functions.auth.user().onCreate(user => {
   return firestore.runTransaction(transaction =>
     transaction.get(permissionsRef).then(permissionsDoc => {
       transaction.set(tokenRef, { accountStatus: 'pending' });
-      transaction.set(userRef, { name: user.displayName, email: user.email, getEmails: true });
+      transaction.set(userRef, { name: user.displayName, email: user.email });
 
       const permissions = permissionsDoc.data();
-      if (permissions) {
-        const customClaims = {
-          admin: permissions.admin,
-          hasAccess: permissions.hasAccess,
-        };
+      const customClaims = {
+        admin: permissions ? permissions.admin : false,
+        hasAccess: permissions ? permissions.hasAccess : false,
+      };
 
-        return admin.auth().setCustomUserClaims(user.uid, customClaims).then(() => transaction.update(tokenRef, { accountStatus: 'ready', refreshTime: admin.firestore.FieldValue.serverTimestamp() }));
-      }
+      transaction.update(userRef, { getEmails: customClaims.hasAccess });
 
-      transaction.update(tokenRef, { accountStatus: 'ready', refreshTime: admin.firestore.FieldValue.serverTimestamp() });
+      return admin.auth().setCustomUserClaims(user.uid, customClaims).then(() => transaction.update(tokenRef, { accountStatus: 'ready', refreshTime: admin.firestore.FieldValue.serverTimestamp() }));
     })
   );
 })

@@ -1,18 +1,27 @@
 service cloud.firestore {
   match /databases/{database}/documents {
+    function isAdmin() {
+      return request.auth.token.admin == true;
+    }
+    
     function hasAccess() {
-      return request.auth.token.hasAccess == true;
+      return (request.auth.token.hasAccess == true) || isAdmin();
     }
 
     function isLoggedIn() {
       return request.auth.uid != null;
     }
 
+    function isValidUserUpdate() {
+      // Users with no access can not update their email preferences
+      return hasAccess() || !request.writeFields.hasAny(['getEmails']);
+    }
+
     match /users/{user} {
       allow get: if request.auth.uid == user;
       allow list: if false;
       allow create: if false;
-      allow update: if request.auth.uid == user;
+      allow update: if (request.auth.uid == user) && isValidUserUpdate();
       allow delete: if false;
     }
 
