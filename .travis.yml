@@ -5,9 +5,10 @@ cache:
   directories:
     - node_modules
 script:
-  - yarn build
+  - npm run build
 after_success:
-  - yarn --cwd ./functions
+  - cd ./functions
+  - npm install
 deploy:
   provider: firebase
   skip_cleanup: true
