@@ -32,6 +32,13 @@ const styles = theme => ({
     backgroundColor: theme.palette.background.default,
     padding: theme.spacing.unit * 3,
   },
+  viewed: {
+    fontSize: 'inherit',
+  },
+  unviewed: {
+    fontSize: 'inherit',
+    fontWeight: 700,
+  },
 })
 
 class Dashboard extends React.Component {
@@ -126,7 +133,26 @@ class Dashboard extends React.Component {
                       indeterminate={order.viewed && !order.completed}
                       disableRipple
                     />
-                    <ListItemText primary={order.name} secondary={order.email} />
+                    <ListItemText
+                      disableTypography
+                      primary={
+                        <Typography
+                          variant="subheading"
+                          className={order.viewed ? classes.viewed : classes.unviewed}
+                          component="span"
+                        >
+                          {order.name}
+                        </Typography>
+                      }
+                      secondary={
+                        <Typography
+                          variant="body1"
+                          className={order.viewed ? classes.viewed : classes.unviewed}
+                          color="textSecondary"
+                        >
+                          {order.email}
+                        </Typography>
+                      } />
                     <ListItemSecondaryAction>
                       <IconButton onClick={this.handleDeleteClick(order)}>
                         <Icon>delete</Icon>
