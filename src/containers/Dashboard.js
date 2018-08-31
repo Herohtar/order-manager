@@ -142,24 +142,11 @@ class Dashboard extends React.Component {
                     />
                     <ListItemText
                       disableTypography
-                      primary={
-                        <Typography
-                          variant="subheading"
-                          className={order.viewed ? classes.viewed : classes.unviewed}
-                          component="span"
-                        >
-                          {order.name}
-                        </Typography>
-                      }
-                      secondary={
-                        <Typography
-                          variant="body1"
-                          className={order.viewed ? classes.viewed : classes.unviewed}
-                          color="textSecondary"
-                        >
-                          {order.email}
-                        </Typography>
-                      } />
+                      primary={order.name}
+                      primaryTypographyProps={{className: order.viewed ? classes.viewed : classes.unviewed}}
+                      secondary={order.email}
+                      secondaryTypographyProps={{className: order.viewed ? classes.viewed : classes.unviewed}}
+                    />
                     <ListItemSecondaryAction>
                       <IconButton onClick={this.handleDeleteClick(order)}>
                         <Icon>delete</Icon>
