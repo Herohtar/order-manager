@@ -92,7 +92,7 @@ class Account extends React.Component {
               <Typography variant="headline">Name: {authData.authUser.displayName}</Typography>
               <Typography variant="headline">Email: {authData.authUser.email}</Typography>
               {(!!authData.token && (authData.token.claims.hasAccess || authData.token.claims.admin)) ?
-                <FormControlLabel control={<Checkbox checked={getEmails} onChange={this.handleGetEmailsChange()} value="getEmails" />} label="Get Emails" />
+                <FormControlLabel control={<Checkbox checked={getEmails} onChange={this.handleGetEmailsChange} value="getEmails" />} label="Get Emails" />
                 :
                 null
               }
