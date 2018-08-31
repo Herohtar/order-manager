@@ -9,6 +9,7 @@ script:
 after_success:
   - cd ./functions
   - npm install
+  - cd ..
 deploy:
   provider: firebase
   skip_cleanup: true
