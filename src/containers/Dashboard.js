@@ -32,6 +32,13 @@ const styles = theme => ({
     backgroundColor: theme.palette.background.default,
     padding: theme.spacing.unit * 3,
   },
+  viewed: {
+    fontSize: 'inherit',
+  },
+  unviewed: {
+    fontSize: 'inherit',
+    fontWeight: 700,
+  },
 })
 
 class Dashboard extends React.Component {
@@ -52,7 +59,8 @@ class Dashboard extends React.Component {
   }
 
   componentWillUnmount() {
-    this.unsubscribeOrdersChanged();
+    clearTimeout(this.setViewedTimeout)
+    this.unsubscribeOrdersChanged()
   }
 
   handleOrdersChanged = snapshot => {
@@ -85,6 +93,12 @@ class Dashboard extends React.Component {
   }
 
   handleOrderClick = order => e => {
+    clearTimeout(this.setViewedTimeout)
+
+    if (!order.viewed) {
+      this.setViewedTimeout = setTimeout(() => firestore.collection('orders').doc(order.id).update({ viewed: true }), 5000)
+    }
+
     this.setState(() => ({ selectedOrder: order }))
   }
 
@@ -126,7 +140,12 @@ class Dashboard extends React.Component {
                       indeterminate={order.viewed && !order.completed}
                       disableRipple
                     />
-                    <ListItemText primary={order.name} secondary={order.email} />
+                    <ListItemText
+                      primary={order.name}
+                      primaryTypographyProps={{className: order.viewed ? classes.viewed : classes.unviewed}}
+                      secondary={order.email}
+                      secondaryTypographyProps={{className: order.viewed ? classes.viewed : classes.unviewed}}
+                    />
                     <ListItemSecondaryAction>
                       <IconButton onClick={this.handleDeleteClick(order)}>
                         <Icon>delete</Icon>
