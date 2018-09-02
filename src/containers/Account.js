@@ -10,7 +10,7 @@ import CardContent from '@material-ui/core/CardContent'
 import CardActions from '@material-ui/core/CardActions'
 import Button from '@material-ui/core/Button'
 import Snackbar from '@material-ui/core/Snackbar'
-import Icon from '@material-ui/core/Icon'
+import ErrorTwoToneIcon from '@material-ui/icons/ErrorTwoTone'
 import { compose } from 'recompose'
 import YesNoDialog from '../components/YesNoDialog'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
@@ -118,7 +118,7 @@ class Account extends React.Component {
           </Card>
         </Grid>
         <YesNoDialog open={dialogOpen} title="Delete account?" message="Are you sure you want to delete your account? You will be signed out and will no longer have accesss to your order dashboard." noText="No" yesText="Yes, delete my account" onNo={this.handleNo} onYes={this.handleYes} />
-        <Snackbar anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }} open={error} onClose={this.handleClose} autoHideDuration={5000} message={errorMessage} action={<Icon color="error">error_outline</Icon>} />
+        <Snackbar anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }} open={error} onClose={this.handleClose} autoHideDuration={5000} message={errorMessage} action={<ErrorTwoToneIcon color="error" />} />
       </Grid>
     )
   }

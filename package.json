@@ -17,6 +17,7 @@
   },
   "dependencies": {
     "@material-ui/core": "^3.0.0",
+    "@material-ui/icons": "^3.0.1",
     "firebase": "^5.4.1",
     "moment": "^2.22.2",
     "react-firebaseui": "^3.0.6",

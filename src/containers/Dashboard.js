@@ -11,8 +11,11 @@ import MenuItem from '@material-ui/core/MenuItem'
 import ListItemText from '@material-ui/core/ListItemText'
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction'
 import Checkbox from '@material-ui/core/Checkbox'
-import Icon from '@material-ui/core/Icon'
 import IconButton from '@material-ui/core/IconButton'
+import DeleteTwoToneIcon from '@material-ui/icons/DeleteTwoTone'
+import DoneIcon from '@material-ui/icons/Done'
+import PriorityHighIcon from '@material-ui/icons/PriorityHigh'
+import NewReleasesTwoToneIcon from '@material-ui/icons/NewReleasesTwoTone'
 import Typography from '@material-ui/core/Typography'
 import OrderCard from '../components/OrderCard'
 import { Flipper, Flipped } from 'react-flip-toolkit'
@@ -139,9 +142,9 @@ class Dashboard extends React.Component {
                   <MenuItem selected={selectedOrder == order} onClick={this.handleOrderClick(order)}>
                     <Checkbox
                       checked={!order.viewed}
-                      checkedIcon={<Icon>star</Icon>}
-                      icon={<Icon>done</Icon>}
-                      indeterminateIcon={<Icon>star_outline</Icon>}
+                      checkedIcon={<NewReleasesTwoToneIcon />}
+                      icon={<DoneIcon />}
+                      indeterminateIcon={<PriorityHighIcon />}
                       indeterminate={order.viewed && !order.completed}
                       disableRipple
                     />
@@ -153,7 +156,7 @@ class Dashboard extends React.Component {
                     />
                     <ListItemSecondaryAction>
                       <IconButton onClick={this.handleDeleteClick(order)}>
-                        <Icon>delete</Icon>
+                        <DeleteTwoToneIcon />
                       </IconButton>
                     </ListItemSecondaryAction>
                   </MenuItem>
