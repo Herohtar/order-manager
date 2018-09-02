@@ -117,6 +117,11 @@ class Dashboard extends React.Component {
     this.setState(() => ({ dialogOpen: false, orderToDelete: null }))
   }
 
+  handleToggleCompleted = () => {
+    const { selectedOrder } = this.state
+    firestore.collection('orders').doc(selectedOrder.id).update({ completed: !selectedOrder.completed })
+  }
+
   render () {
     const { classes } = this.props
     const { orders, selectedOrder, dialogOpen, dialogMessage } = this.state
@@ -158,7 +163,7 @@ class Dashboard extends React.Component {
           </MenuList>
         </Drawer>
         {selectedOrder ?
-          <OrderCard order={selectedOrder} />
+          <OrderCard order={selectedOrder} onToggleCompleted={this.handleToggleCompleted} />
           :
           <div className={classes.content}>
             <Typography variant="display1" paragraph>Dashboard</Typography>

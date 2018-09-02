@@ -3,6 +3,9 @@ import React from 'react'
 import { withStyles } from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
 import Paper from '@material-ui/core/Paper'
+import Grid from '@material-ui/core/Grid'
+import Button from '@material-ui/core/Button'
+import Moment from 'react-moment'
 
 const styles = theme => ({
   root: {
@@ -13,28 +16,33 @@ const styles = theme => ({
   },
 })
 
-const OrderCard = ({ classes, order }) => (
+const OrderCard = ({ classes, order, onToggleCompleted }) => (
   <Paper className={classes.root} square>
-    <Typography variant="display1" paragraph>Order</Typography>
-    <Typography variant="body2">Name:</Typography>
-    <Typography variant="body1" paragraph>{order.name}</Typography>
-    <Typography variant="body2">Email:</Typography>
-    <Typography variant="body1" paragraph>{order.email}</Typography>
-    <Typography variant="body2">Delivery requested:</Typography>
-    <Typography variant="body1" paragraph>{order.delivery}</Typography>
-    {order.delivery == "yes" && (
-      <React.Fragment>
-        <Typography variant="body2">Address:</Typography>
-        <Typography variant="body1" paragraph>{order.address}</Typography>
-      </React.Fragment>
-    )}
-    <Typography variant="subheading" paragraph>Products</Typography>
-    {order.products.map(product => (
-      <React.Fragment key={product.name}>
-        <Typography variant="body2">{product.name}</Typography>
-        <Typography variant="body1" paragraph>Amount: {product.amount}</Typography>
-      </React.Fragment>
-    ))}
+    <Grid container>
+      <Grid item xs>
+        <Typography variant="headline" paragraph>{order.name} on <Moment date={order.date.toDate()} format="dddd, MMMM Do, YYYY" /></Typography>
+        <Typography variant="body2">Email:</Typography>
+        <Typography variant="body1" paragraph>{order.email}</Typography>
+        <Typography variant="body2">Delivery requested:</Typography>
+        <Typography variant="body1" paragraph>{order.delivery}</Typography>
+        {order.delivery == "yes" && (
+          <React.Fragment>
+            <Typography variant="body2">Address:</Typography>
+            <Typography variant="body1" paragraph>{order.address}</Typography>
+          </React.Fragment>
+        )}
+        <Typography variant="subheading" paragraph>Products</Typography>
+        {order.products.map(product => (
+          <React.Fragment key={product.name}>
+            <Typography variant="body2">{product.name}</Typography>
+            <Typography variant="body1" paragraph>Amount: {product.amount}</Typography>
+          </React.Fragment>
+        ))}
+      </Grid>
+      <Grid item xs="auto">
+        <Button variant="outlined" onClick={onToggleCompleted}>{order.completed ? 'Mark as incomplete' : 'Mark as completed'}</Button>
+      </Grid>
+    </Grid>
   </Paper>
 )
 
