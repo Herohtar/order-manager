@@ -22,8 +22,22 @@ const styles = theme => ({
   root: {
     padding: theme.spacing.unit * 3,
   },
+  card: {
+    display: 'flex',
+    alignItems: 'stretch',
+    minHeight: 150,
+  },
   media: {
-    height: 300,
+    width: 150,
+  },
+  content: {
+    flexGrow: 1,
+  },
+  actions: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'stretch',
+    justifyContent: 'space-evenly',
   },
 })
 
@@ -85,25 +99,25 @@ class Account extends React.Component {
           <Head title={`Account - ${title}`} />
         )} />
         <Grid item xs={4}>
-          <Card>
+          <Card className={classes.card}>
             <CardMedia image={authData.authUser.photoURL} className={classes.media} />
-            <CardContent>
+            <CardContent className={classes.content}>
               {(authData.accountStatus === 'pending') && <Typography variant="headline" paragraph>Account setup pending.</Typography>}
-              <Typography variant="headline">Name: {authData.authUser.displayName}</Typography>
-              <Typography variant="headline">Email: {authData.authUser.email}</Typography>
+              <Typography variant="headline">{authData.authUser.displayName}</Typography>
+              <Typography variant="subheading" paragraph>{authData.authUser.email}</Typography>
               {(!!authData.token && (authData.token.claims.hasAccess || authData.token.claims.admin)) ?
-                <FormControlLabel control={<Checkbox checked={getEmails} onChange={this.handleGetEmailsChange} value="getEmails" />} label="Get Emails" />
+                <FormControlLabel control={<Checkbox checked={getEmails} onChange={this.handleGetEmailsChange} value="getEmails" />} label="Get order notification emails" />
                 :
                 null
               }
             </CardContent>
-            <CardActions>
+            <CardActions className={classes.actions}>
               <Button variant="contained" color="primary" onClick={() => auth.signOut()}>Sign Out</Button>
               <Button variant="outlined" onClick={this.handleDeleteClick}>Delete Account</Button>
             </CardActions>
-            <YesNoDialog open={dialogOpen} title="Delete account?" message="Are you sure you want to delete your account? You will be signed out and will no longer have accesss to your order dashboard." noText="No" yesText="Yes, delete my account" onNo={this.handleNo} onYes={this.handleYes} />
           </Card>
         </Grid>
+        <YesNoDialog open={dialogOpen} title="Delete account?" message="Are you sure you want to delete your account? You will be signed out and will no longer have accesss to your order dashboard." noText="No" yesText="Yes, delete my account" onNo={this.handleNo} onYes={this.handleYes} />
         <Snackbar anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }} open={error} onClose={this.handleClose} autoHideDuration={5000} message={errorMessage} action={<Icon color="error">error_outline</Icon>} />
       </Grid>
     )

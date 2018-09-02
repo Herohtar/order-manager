@@ -19,49 +19,61 @@ const uiConfig = {
     firebase.auth.GoogleAuthProvider.PROVIDER_ID
   ],
   callbacks: {
-    signInSuccessWithAuthResult: (authResult) => {
-      if (authResult.additionalUserInfo.isNewUser) {
-
-      }
-    }
+    signInSuccessWithAuthResult: () => false
   },
-  credentialHelper: 'none'
+  credentialHelper: 'none',
 }
 
 const AccountMessage = ({ authData }) => {
   const { accountStatus, token } = authData
+  let title;
+  let message;
   switch (accountStatus) {
     case null:
-      return null
+      title = 'Processing login...'
+      message = 'Please wait while your account is being set up.'
+      break
     case 'pending':
-      return <Typography variant="body1">Please wait while your account is being set up.</Typography>
+      title = 'Welcome!'
+      message = 'We\'re still setting up a few things on your account. If you keep seeing this message, please contact the site admin.'
+      break
     case 'ready':
-      return (!!token && token.claims.hasAccess) ?
-        <Typography variant="body1">To view orders please visit your <Link to="/dashboard">dashboard</Link>.</Typography>
-        :
-        <Typography variant="body1">It seems your account does not belong to an authorized user. If this is incorrect, please contact the site admin.</Typography>
+      if (!!token && token.claims.hasAccess) {
+        title = 'Welcome!'
+        message = 'To view orders please visit the dashboard.'
+      } else {
+        title = 'Unauthorized'
+        message = 'It seems your account does not belong to an authorized user. If this is incorrect, please contact the site admin.'
+      }
+      break
     default:
-      return <Typography variant="body1">An unknown error has occurred. If you keep seeing this message, please contact the site admin.</Typography>
+     title = 'Error'
+     message = 'An unknown error has occurred. If you keep seeing this message, please contact the site admin.'
+     break
   }
+  return (
+    <React.Fragment>
+      <Typography variant="display1" paragraph>{title}</Typography>
+      <Typography variant="body1">{message}</Typography>
+    </React.Fragment>
+  )
 }
 
 export default withStyles(styles)(({ classes }) => (
   <AuthDataContext.Consumer>
     {
-      authData => authData.authUser ?
-      <div className={classes.root}>
-        <SiteData render={({title}) => (
-            <Head title={title} />
-        )} />
-        { authData.accountStatus ?
-          <Typography variant="display1" paragraph>Welcome!</Typography>
-          :
-          <Typography variant="display1" paragraph>Processing login...</Typography>
-        }
-        <AccountMessage authData={authData} />
-      </div>
-      :
-      <StyledFirebaseAuth uiConfig={uiConfig} firebaseAuth={auth} />
+      authData => (
+        <div className={classes.root}>
+          <SiteData render={({title}) => (
+              <Head title={title} />
+          )} />
+          {authData.authUser ?
+            <AccountMessage authData={authData} />
+            :
+            <StyledFirebaseAuth uiConfig={uiConfig} firebaseAuth={auth} />
+          }
+        </div>
+      )
     }
   </AuthDataContext.Consumer>
 ))

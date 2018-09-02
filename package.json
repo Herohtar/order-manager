@@ -1,6 +1,9 @@
 {
   "name": "order-manager",
   "version": "0.1.0",
+  "description": "Order Manager Website",
+  "author": "Herohtar <belac1186@gmail.com>",
+  "repository": "git@github.com:Herohtar/order-manager.git",
   "main": "index.js",
   "license": "MIT",
   "scripts": {
@@ -16,8 +19,6 @@
     "@material-ui/core": "^3.0.0",
     "firebase": "^5.4.1",
     "moment": "^2.22.2",
-    "react": "^16.4.2",
-    "react-dom": "^16.4.2",
     "react-firebaseui": "^3.0.6",
     "react-flip-toolkit": "^4.0.2",
     "react-moment": "^0.7.9",
@@ -27,7 +28,5 @@
   "devDependencies": {
     "eslint-config-react-tools": "^1.1.6",
     "serve": "^9.6.0"
-  },
-  "repository": "git@github.com:Herohtar/order-manager.git",
-  "author": "Herohtar <belac1186@gmail.com>"
+  }
 }
