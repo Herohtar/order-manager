@@ -3,7 +3,7 @@ service cloud.firestore {
     function isAdmin() {
       return request.auth.token.admin == true;
     }
-    
+
     function hasAccess() {
       return (request.auth.token.hasAccess == true) || isAdmin();
     }
@@ -33,7 +33,8 @@ service cloud.firestore {
 
     match /orders/{order} {
       allow read: if (isLoggedIn() && hasAccess());
-      allow write: if (isLoggedIn() && hasAccess());
+      allow create: if false;
+      allow update, delete: if (isLoggedIn() && hasAccess());
     }
 
     match /userPermissions/{document=**} {
