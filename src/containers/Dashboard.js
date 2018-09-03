@@ -6,19 +6,9 @@ import withAuthorization from '../session/withAuthorization'
 import { firestore } from '../firebase'
 import { withStyles } from '@material-ui/core/styles'
 import Drawer from '@material-ui/core/Drawer'
-import MenuList from '@material-ui/core/MenuList'
-import MenuItem from '@material-ui/core/MenuItem'
-import ListItemText from '@material-ui/core/ListItemText'
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction'
-import Checkbox from '@material-ui/core/Checkbox'
-import IconButton from '@material-ui/core/IconButton'
-import DeleteTwoToneIcon from '@material-ui/icons/DeleteTwoTone'
-import DoneIcon from '@material-ui/icons/Done'
-import PriorityHighIcon from '@material-ui/icons/PriorityHigh'
-import NewReleasesTwoToneIcon from '@material-ui/icons/NewReleasesTwoTone'
+import OrderList from '../components/OrderList'
 import Typography from '@material-ui/core/Typography'
 import OrderCard from '../components/OrderCard'
-import { Flipper, Flipped } from 'react-flip-toolkit'
 import YesNoDialog from '../components/YesNoDialog'
 
 const styles = theme => ({
@@ -34,13 +24,6 @@ const styles = theme => ({
     flexGrow: 1,
     backgroundColor: theme.palette.background.default,
     padding: theme.spacing.unit * 3,
-  },
-  viewed: {
-    fontSize: 'inherit',
-  },
-  unviewed: {
-    fontSize: 'inherit',
-    fontWeight: 700,
   },
 })
 
@@ -95,7 +78,7 @@ class Dashboard extends React.Component {
     this.setState(() => ({ orders, selectedOrder }))
   }
 
-  handleOrderClick = order => e => {
+  handleOrderClick = order => {
     clearTimeout(this.setViewedTimeout)
 
     if (!order.viewed) {
@@ -105,7 +88,7 @@ class Dashboard extends React.Component {
     this.setState(() => ({ selectedOrder: order }))
   }
 
-  handleDeleteClick = order => e => {
+  handleDeleteClick = order => {
     const dialogMessage = `Are you sure you want to delete the order from ${order.name}?`
     this.setState(() => ({ dialogOpen: true, dialogMessage, orderToDelete: order.id }))
   }
@@ -135,35 +118,12 @@ class Dashboard extends React.Component {
           <Head title={`Dashboard - ${title}`} />
         )} />
         <Drawer variant="permanent" classes={{ paper: classes.drawerPaper }}>
-          <MenuList dense>
-            <Flipper flipKey={orders}>
-              {orders.map(order => (
-                <Flipped key={order.id} flipId={order.id}>
-                  <MenuItem selected={selectedOrder == order} onClick={this.handleOrderClick(order)}>
-                    <Checkbox
-                      checked={!order.viewed}
-                      checkedIcon={<NewReleasesTwoToneIcon />}
-                      icon={<DoneIcon />}
-                      indeterminateIcon={<PriorityHighIcon />}
-                      indeterminate={order.viewed && !order.completed}
-                      disableRipple
-                    />
-                    <ListItemText
-                      primary={order.name}
-                      primaryTypographyProps={{className: order.viewed ? classes.viewed : classes.unviewed}}
-                      secondary={order.email}
-                      secondaryTypographyProps={{className: order.viewed ? classes.viewed : classes.unviewed}}
-                    />
-                    <ListItemSecondaryAction>
-                      <IconButton onClick={this.handleDeleteClick(order)}>
-                        <DeleteTwoToneIcon />
-                      </IconButton>
-                    </ListItemSecondaryAction>
-                  </MenuItem>
-                </Flipped>
-              ))}
-            </Flipper>
-          </MenuList>
+          <OrderList
+            orders={orders}
+            selectedOrder={selectedOrder}
+            onOrderClick={this.handleOrderClick}
+            onDeleteClick={this.handleDeleteClick}
+          />
         </Drawer>
         {selectedOrder ?
           <OrderCard order={selectedOrder} onToggleCompleted={this.handleToggleCompleted} />
