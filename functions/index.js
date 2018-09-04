@@ -57,12 +57,11 @@ exports.removeUserData = functions.auth.user().onDelete(user => {
 // Sends a notification email when a new order is created
 exports.sendOrderEmail = functions.firestore.document('orders/{orderId}').onCreate((snapshot, context) => {
   const data = snapshot.data();
-  console.log(data);
   return sendOrderEmail(data);
 })
 
 function getEmailsToNotify() {
-  return firestore.collection('users').where('getEmails', '==', true).get().then(results => results.docs.map(user => `${user.displayName} <${user.email}>`).join(','));
+  return firestore.collection('users').where('getEmails', '==', true).get().then(results => results.docs.map(user => `${user.get('name')} <${user.get('email')}>`).join(','));
 }
 
 // Sends an order email
