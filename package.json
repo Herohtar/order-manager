@@ -27,7 +27,11 @@
     "recompose": "^0.28.2"
   },
   "devDependencies": {
+    "@babel/cli": "^7.0.0",
+    "@babel/core": "^7.0.0",
+    "@babel/preset-env": "^7.0.0",
     "eslint-config-react-tools": "^1.1.6",
+    "rimraf": "^2.6.2",
     "serve": "^9.6.0"
   }
 }
