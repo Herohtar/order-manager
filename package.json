@@ -13,7 +13,10 @@
     "serve": "serve dist -p 3000",
     "deploy": "firebase deploy",
     "deploy-functions": "firebase deploy --only functions",
-    "deploy-hosting": "firebase deploy --only hosting"
+    "deploy-hosting": "firebase deploy --only hosting",
+    "funcs:build": "babel src/functions --out-dir dist/functions",
+    "funcs:install": "cd dist/functions && npm install",
+    "funcs:predeploy": "npm run funcs:build && npm run funcs:install"
   },
   "dependencies": {
     "@material-ui/core": "^3.0.2",
@@ -31,7 +34,6 @@
     "@babel/core": "^7.0.0",
     "@babel/preset-env": "^7.0.0",
     "eslint-config-react-tools": "^1.1.6",
-    "rimraf": "^2.6.2",
     "serve": "^9.6.0"
   }
 }
