@@ -3,12 +3,17 @@
     "rules": "firestore.rules",
     "indexes": "firestore.indexes.json"
   },
+  "functions": {
+    "source": "dist/functions"
+  },
   "hosting": {
     "public": "dist",
     "ignore": [
       "firebase.json",
       "**/.*",
-      "**/node_modules/**"
-    ]
+      "**/node_modules/**",
+      "functions/**"
+    ],
+    "trailingSlash": false
   }
 }
