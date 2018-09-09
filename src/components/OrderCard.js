@@ -13,6 +13,7 @@ const styles = theme => ({
     padding: theme.spacing.unit * 3,
     height: 'calc(100vh - 48px)',
     overflow: 'auto',
+    background: theme.palette.background.order,
   },
 })
 
