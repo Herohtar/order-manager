@@ -66,24 +66,36 @@ async function getEmailsToNotify() {
   return results.docs.map(user => `${user.get('name')} <${user.get('email')}>`).join(',');
 }
 
+function escapeHtml(text) {
+  const map = {
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#039;'
+  };
+
+  return text.replace(new RegExp(`[${Object.keys(map).join('')}]`, 'g'), m => map[m]);
+}
+
 function getOrderDetailString(type, name, email, delivery, address, products) {
   var detailString;
 
   if (type.toLowerCase() === 'html') {
-    detailString = `<b>Name:</b> ${name}<br/>
-<b>Email:</b> ${email}<br/>
-<b>Delivery:</b> ${delivery}`
+    detailString = `<b>Name:</b> ${escapeHtml(name)}<br/>
+<b>Email:</b> ${escapeHtml(email)}<br/>
+<b>Delivery:</b> ${escapeHtml(delivery)}`
 
-    if (delivery === 'yes') {
-      detailString = detailString.concat('<br/><b>', 'Address:</b> ', address);
+    if (delivery.toLowerCase() === 'yes') {
+      detailString = detailString.concat('<br/><b>', 'Address:</b> ', escapeHtml(address));
     }
-    products.forEach(product => detailString = detailString.concat('<br/><b>', product.name, ':</b> ', product.amount))
+    products.forEach(product => detailString = detailString.concat('<br/><b>', escapeHtml(product.name), ':</b> ', escapeHtml(product.amount)))
   } else {
     detailString = `Name: ${name}
 Email: ${email}
 Delivery: ${delivery}`
 
-    if (delivery === 'yes') {
+    if (delivery.toLowerCase() === 'yes') {
       detailString = detailString.concat('\n', 'Address: ', address);
     }
     products.forEach(product => detailString = detailString.concat('\n', product.name, ': ', product.amount))
