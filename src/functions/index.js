@@ -126,7 +126,7 @@ async function sendOrderEmail({name, email, delivery, address, products}) {
 async function sendConfirmationEmail({name, email, delivery, address, products}) {
   const mailOptions = {
     from: `${siteName} <${functions.config().email.noreply}>`,
-    to: `${name} <${email}>`,
+    to: `${escapeHtml(name)} <${email}>`,
     subject: `Order Confirmation`,
   }
 
