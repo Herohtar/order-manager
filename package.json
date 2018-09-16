@@ -25,16 +25,16 @@
     "@babel/preset-env": "^7.0.0",
     "@material-ui/core": "3.0.2",
     "@material-ui/icons": "^3.0.1",
-    "firebase": "^5.4.1",
+    "firebase": "^5.5.0",
     "moment": "^2.22.2",
     "react-firebaseui": "^3.0.7",
-    "react-flip-toolkit": "^4.0.6",
+    "react-flip-toolkit": "^4.0.7",
     "react-moment": "^0.7.9",
-    "react-static": "^5.9.7",
-    "recompose": "^0.28.2"
+    "react-static": "^5.9.8",
+    "recompose": "^0.30.0"
   },
   "devDependencies": {
     "eslint-config-react-tools": "^1.1.6",
-    "serve": "^9.6.0"
+    "serve": "^10.0.1"
   }
 }
