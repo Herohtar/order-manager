@@ -63,7 +63,6 @@ export default {
             <meta charSet="UTF-8" />
             <meta name="viewport" content="width=device-width, initial-scale=1" />
             <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700" rel="stylesheet" />
-            <script src="https://identity.netlify.com/v1/netlify-identity-widget.js" />
           </Head>
           <Body>
             {children}
