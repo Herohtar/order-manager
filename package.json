@@ -30,7 +30,7 @@
     "react-firebaseui": "^3.0.7",
     "react-flip-toolkit": "^4.0.7",
     "react-moment": "^0.7.9",
-    "react-static": "^5.9.7",
+    "react-static": "^5.9.8",
     "recompose": "^0.30.0"
   },
   "devDependencies": {
