@@ -11,8 +11,8 @@ import DeleteTwoToneIcon from '@material-ui/icons/DeleteTwoTone'
 import DoneIcon from '@material-ui/icons/Done'
 import PriorityHighIcon from '@material-ui/icons/PriorityHigh'
 import NewReleasesTwoToneIcon from '@material-ui/icons/NewReleasesTwoTone'
+import blue from '@material-ui/core/colors/blue'
 import green from '@material-ui/core/colors/green'
-import red from '@material-ui/core/colors/red'
 import orange from '@material-ui/core/colors/orange'
 import { Flipper, Flipped } from 'react-flip-toolkit'
 
@@ -46,7 +46,7 @@ const OrderList = ({ classes, orders, selectedOrder, onDeleteClick, onOrderClick
           <MenuItem selected={selectedOrder == order} onClick={handleOrderClick(onOrderClick, order)}>
             <Checkbox
               checked={!order.viewed}
-              checkedIcon={<NewReleasesTwoToneIcon nativeColor={red['500']} />}
+              checkedIcon={<NewReleasesTwoToneIcon nativeColor={blue['A400']} />}
               icon={<DoneIcon nativeColor={green['A700']} />}
               indeterminateIcon={<PriorityHighIcon nativeColor={orange['A400']} />}
               indeterminate={order.viewed && !order.completed}
