@@ -12,4 +12,7 @@ export default {
       order: deepPurple[100],
     },
   },
+  typography: {
+    useNextVariants: true,
+  },
 }
