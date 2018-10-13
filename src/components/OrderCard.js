@@ -21,22 +21,22 @@ const OrderCard = ({ classes, order, onToggleCompleted }) => (
   <Paper className={classes.root} square>
     <Grid container>
       <Grid item xs>
-        <Typography variant="headline" paragraph>{order.name} on <Moment date={order.date.toDate()} format="dddd, MMMM Do, YYYY" /></Typography>
-        <Typography variant="body2">Email:</Typography>
-        <Typography variant="body1" paragraph>{order.email}</Typography>
-        <Typography variant="body2">Delivery requested:</Typography>
-        <Typography variant="body1" paragraph>{order.delivery}</Typography>
+        <Typography variant="h5" paragraph>{order.name} on <Moment date={order.date.toDate()} format="dddd, MMMM Do, YYYY" /></Typography>
+        <Typography variant="body1">Email:</Typography>
+        <Typography variant="body2" paragraph>{order.email}</Typography>
+        <Typography variant="body1">Delivery requested:</Typography>
+        <Typography variant="body2" paragraph>{order.delivery}</Typography>
         {order.delivery == "yes" && (
           <React.Fragment>
-            <Typography variant="body2">Address:</Typography>
-            <Typography variant="body1" paragraph>{order.address}</Typography>
+            <Typography variant="body1">Address:</Typography>
+            <Typography variant="body2" paragraph>{order.address}</Typography>
           </React.Fragment>
         )}
-        <Typography variant="subheading" paragraph>Products</Typography>
+        <Typography variant="subtitle1" paragraph>Products</Typography>
         {order.products.map(product => (
           <React.Fragment key={product.name}>
-            <Typography variant="body2">{product.name}</Typography>
-            <Typography variant="body1" paragraph>Amount: {product.amount}</Typography>
+            <Typography variant="body1">{product.name}</Typography>
+            <Typography variant="body2" paragraph>Amount: {product.amount}</Typography>
           </React.Fragment>
         ))}
       </Grid>

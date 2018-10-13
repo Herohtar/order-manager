@@ -53,8 +53,8 @@ const AccountMessage = ({ authData }) => {
   }
   return (
     <React.Fragment>
-      <Typography variant="display1" paragraph>{title}</Typography>
-      <Typography variant="body1">{message}</Typography>
+      <Typography variant="h4" paragraph>{title}</Typography>
+      <Typography variant="body2">{message}</Typography>
     </React.Fragment>
   )
 }

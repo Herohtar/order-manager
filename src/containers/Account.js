@@ -103,8 +103,8 @@ class Account extends React.Component {
             <CardMedia image={authData.authUser.photoURL} className={classes.media} />
             <CardContent className={classes.content}>
               {(authData.accountStatus === 'pending') && <Typography variant="headline" paragraph>Account setup pending.</Typography>}
-              <Typography variant="headline">{authData.authUser.displayName}</Typography>
-              <Typography variant="subheading" paragraph>{authData.authUser.email}</Typography>
+              <Typography variant="h5">{authData.authUser.displayName}</Typography>
+              <Typography variant="subtitle1" paragraph>{authData.authUser.email}</Typography>
               {(!!authData.token && (authData.token.claims.hasAccess || authData.token.claims.admin)) ?
                 <FormControlLabel control={<Checkbox checked={getEmails} onChange={this.handleGetEmailsChange} value="getEmails" />} label="Get order notification emails" />
                 :

@@ -129,8 +129,8 @@ class Dashboard extends React.Component {
           <OrderCard order={selectedOrder} onToggleCompleted={this.handleToggleCompleted} />
           :
           <div className={classes.content}>
-            <Typography variant="display1" paragraph>Dashboard</Typography>
-            <Typography variant="body1">No order selected.</Typography>
+            <Typography variant="h4" paragraph>Dashboard</Typography>
+            <Typography variant="body2">No order selected.</Typography>
           </div>
         }
         <YesNoDialog open={dialogOpen} title="Delete order?" message={dialogMessage} onNo={this.handleNo} onYes={this.handleYes} />
