@@ -20,22 +20,22 @@
     "funcs:predeploy": "npm run funcs:build && npm run funcs:install"
   },
   "dependencies": {
-    "@babel/cli": "^7.1.2",
-    "@babel/core": "^7.1.2",
-    "@babel/preset-env": "^7.1.0",
-    "@material-ui/core": "^3.2.0",
+    "@babel/cli": "^7.2.0",
+    "@babel/core": "^7.2.0",
+    "@babel/preset-env": "^7.2.0",
+    "@material-ui/core": "^3.6.1",
     "@material-ui/icons": "^3.0.1",
-    "firebase": "^5.5.4",
+    "firebase": "^5.7.0",
     "moment": "^2.22.2",
     "react-firebaseui": "^3.1.2",
-    "react-flip-toolkit": "^4.0.9",
+    "react-flip-toolkit": "^6.3.0",
     "react-jss": "^8.6.1",
-    "react-moment": "^0.7.9",
+    "react-moment": "^0.8.4",
     "react-static": "^5.9.12",
     "recompose": "^0.30.0"
   },
   "devDependencies": {
     "eslint-config-react-tools": "^1.1.6",
-    "serve": "^10.0.1"
+    "serve": "^10.1.1"
   }
 }
