@@ -9,7 +9,7 @@ const withAuthorization = condition => Component => (
     componentDidMount () {
       this.unregisterAuthObserver = auth.onAuthStateChanged(async (authUser) => {
         if (!(await condition(authUser))) {
-          navigate('/')
+          navigate('/', { replace: true })
         }
       })
     }
