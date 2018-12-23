@@ -1,21 +1,21 @@
 import React from 'react'
-import { withRouter } from 'react-static'
-
-import AuthDataContext from './AuthDataContext';
+import { navigate } from '@reach/router'
+//
+import AuthDataContext from './AuthDataContext'
 import { auth } from '../firebase'
 
-const withAuthorization = condition => Component => {
+const withAuthorization = condition => Component => (
   class WithAuthorization extends React.Component {
     componentDidMount () {
       this.unregisterAuthObserver = auth.onAuthStateChanged(async (authUser) => {
         if (!(await condition(authUser))) {
-          this.props.history.push('/')
+          navigate('/')
         }
       })
     }
 
     componentWillUnmount() {
-      this.unregisterAuthObserver();
+      this.unregisterAuthObserver()
     }
 
     render () {
@@ -28,8 +28,6 @@ const withAuthorization = condition => Component => {
       )
     }
   }
-
-  return withRouter(WithAuthorization)
-}
+)
 
 export default withAuthorization
