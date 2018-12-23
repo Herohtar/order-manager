@@ -114,9 +114,11 @@ class Dashboard extends React.Component {
 
     return (
       <div className={classes.root}>
-        <SiteData render={({title}) => (
-          <Head title={`Dashboard - ${title}`} />
-        )} />
+        <SiteData>
+          {({title}) => (
+            <Head title={`Dashboard - ${title}`} />
+          )}
+        </SiteData>
         <Drawer variant="permanent" classes={{ paper: classes.drawerPaper }}>
           <OrderList
             orders={orders}

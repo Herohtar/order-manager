@@ -1,6 +1,5 @@
 import React from 'react'
-import { Router } from 'react-static'
-import Routes from 'react-static-routes'
+import { Root, Routes } from 'react-static'
 import { compose } from 'recompose'
 //
 import withAuthentication from './session/withAuthentication'
@@ -27,7 +26,7 @@ class App extends React.PureComponent {
     const { classes } = this.props
 
     return (
-      <Router>
+      <Root>
         <div>
           <CssBaseline />
           <AppBar position="sticky" className={classes.appBar}>
@@ -37,7 +36,7 @@ class App extends React.PureComponent {
             <Routes />
           </main>
         </div>
-      </Router>
+      </Root>
     )
   }
 }

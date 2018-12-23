@@ -1,5 +1,6 @@
 import React from 'react'
 import { SiteData, Head } from 'react-static'
+//
 import { auth, firestore } from '../firebase'
 import { withStyles } from '@material-ui/core/styles'
 import Grid from '@material-ui/core/Grid'
@@ -95,9 +96,11 @@ class Account extends React.Component {
 
     return (
       <Grid container justify="center" className={classes.root}>
-        <SiteData render={({title}) => (
-          <Head title={`Account - ${title}`} />
-        )} />
+        <SiteData>
+          {({title}) => (
+            <Head title={`Account - ${title}`} />
+          )}
+        </SiteData>
         <Grid item xs={4}>
           <Card className={classes.card}>
             <CardMedia image={authData.authUser.photoURL} className={classes.media} />

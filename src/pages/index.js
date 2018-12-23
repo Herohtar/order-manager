@@ -1,9 +1,9 @@
 import React from 'react'
-import { SiteData, Head, Link } from 'react-static'
+import { SiteData, Head } from 'react-static'
 //
 import AuthDataContext from '../session/AuthDataContext'
 import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth'
-import { auth, firebase, firestore } from '../firebase'
+import { auth, firebase } from '../firebase'
 import { withStyles } from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
 
@@ -64,9 +64,11 @@ export default withStyles(styles)(({ classes }) => (
     {
       authData => (
         <div className={classes.root}>
-          <SiteData render={({title}) => (
-              <Head title={title} />
-          )} />
+          <SiteData>
+            {({title}) => (
+                <Head title={title} />
+            )}
+          </SiteData>
           {authData.authUser ?
             <AccountMessage authData={authData} />
             :

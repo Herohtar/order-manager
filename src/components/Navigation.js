@@ -1,6 +1,6 @@
 import React from 'react'
-import { Route, Link, cleanPath } from 'react-static'
-
+import { Location, Link } from '@reach/router'
+//
 import AuthDataContext from '../session/AuthDataContext'
 import Tabs from '@material-ui/core/Tabs'
 import Tab from '@material-ui/core/Tab'
@@ -13,18 +13,20 @@ const Navigation = () => (
   <AuthDataContext.Consumer>
     {
       authData => (
-        <Route path="*" render={({ location }) => {
-          const availableRoutes = getAvailableRoutes(authData)
-          const routeIndex = availableRoutes.findIndex(route => cleanPath(route.path) === cleanPath(location.pathname))
-          
-          return (
-            <Tabs value={(routeIndex >= 0) ? routeIndex : false} component="nav">
-              {availableRoutes.map(({ exact, path, label }, index) => (
-                <Tab key={index} component={Link} value={index} exact={exact} to={path} label={label} />
-              ))}
-            </Tabs>
-          )
-        }} />
+        <Location>
+          {({ location }) => {
+            const availableRoutes = getAvailableRoutes(authData)
+            const routeIndex = availableRoutes.findIndex(route => route.path === location.pathname)
+
+            return (
+              <Tabs value={(routeIndex >= 0) ? routeIndex : false} component="nav">
+                {availableRoutes.map(({ path, label }, index) => (
+                  <Tab key={index} component={Link} value={index} to={path} label={label} />
+                ))}
+              </Tabs>
+            )
+          }}
+        </Location>
       )
     }
   </AuthDataContext.Consumer>
