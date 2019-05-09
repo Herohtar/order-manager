@@ -1,6 +1,6 @@
 import React from 'react'
-import { navigate } from '@reach/router'
 //
+import { navigate } from '../components/Router'
 import AuthDataContext from './AuthDataContext'
 import { auth } from '../firebase'
 
