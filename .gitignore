@@ -5,7 +5,10 @@ node_modules/
 /coverage
 
 # production
+/artifacts
 /dist
+
+# dev
 /tmp
 
 # misc
