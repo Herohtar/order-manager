@@ -1,8 +1,19 @@
 import React from 'react'
 //
+import path from 'path'
 import siteConfig from './src/content/SiteConfig.json'
 
 export default {
+  plugins: [
+    [
+      require.resolve('react-static-plugin-source-filesystem'),
+      {
+        location: path.resolve('./src/pages'),
+      },
+    ],
+    require.resolve('react-static-plugin-reach-router'),
+    require.resolve('react-static-plugin-sitemap'),
+  ],
   siteRoot: siteConfig.url,
   getSiteData: () => siteConfig,
   getRoutes: async () => {
