@@ -21,9 +21,8 @@ export default () => ({
       </JssProvider>
     )
   },
-  Head: ({ meta }) => (
-    <React.Fragment>
-      <style id="jss-server-side" dangerouslySetInnerHTML={{ __html: meta.sheetsRegistry.toString() }} />
-    </React.Fragment>
-  ),
+  headElements: (elements, { meta }) => [
+    ...elements,
+    <style id="jss-server-side" dangerouslySetInnerHTML={{ __html: meta.sheetsRegistry.toString() }} />,
+  ],
 })
