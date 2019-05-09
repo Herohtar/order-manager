@@ -14,32 +14,19 @@ const styles = theme => ({
   },
 })
 
-class App extends React.PureComponent {
-  componentDidMount() {
-    const jssStyles = document.getElementById('jss-server-side')
-    if (jssStyles && jssStyles.parentNode) {
-      jssStyles.parentNode.removeChild(jssStyles)
-    }
-  }
-
-  render() {
-    const { classes } = this.props
-
-    return (
-      <Root>
-        <div>
-          <CssBaseline />
-          <AppBar position="sticky" className={classes.appBar}>
-            <Navigation />
-          </AppBar>
-          <main>
-            <Routes />
-          </main>
-        </div>
-      </Root>
-    )
-  }
-}
+const App = ({ classes }) => (
+  <Root>
+    <div>
+      <CssBaseline />
+      <AppBar position="sticky" className={classes.appBar}>
+        <Navigation />
+      </AppBar>
+      <main>
+        <Routes />
+      </main>
+    </div>
+  </Root>
+)
 
 const enhance = compose(
   withAuthentication,
