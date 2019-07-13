@@ -1,6 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles'
+import { ThemeProvider } from '@material-ui/styles'
 
 // Your top level component
 import App from './App'
@@ -12,17 +12,16 @@ export default App
 
 // Render your app
 if (typeof document !== 'undefined') {
-  const target = document.getElementById('root')
+  const target = document.querySelector('#root')
   const renderMethod = target.hasChildNodes() ? ReactDOM.hydrate : ReactDOM.render
-  const muiTheme = createMuiTheme(theme)
   const render = Comp => {
     renderMethod(
-      <MuiThemeProvider theme={muiTheme}>
+      <ThemeProvider theme={theme}>
         <Comp />
-      </MuiThemeProvider>,
+      </ThemeProvider>,
       target,
       () => {
-        const jssStyles = document.getElementById('jss-server-side')
+        const jssStyles = document.querySelector('#jss-server-side')
         if (jssStyles && jssStyles.parentNode) {
           jssStyles.parentNode.removeChild(jssStyles)
         }
@@ -33,7 +32,6 @@ if (typeof document !== 'undefined') {
   // Render!
   render(App)
 
-  // Hot Module Replacement
   if (module && module.hot) {
     module.hot.accept('./App', () => render(App))
   }
