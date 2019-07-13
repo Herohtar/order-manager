@@ -24,7 +24,9 @@ const App = () => {
           <Navigation />
         </AppBar>
         <main>
-          <Routes />
+          <React.Suspense fallback="Loading...">
+            <Routes />
+          </React.Suspense>
         </main>
       </div>
     </Root>
