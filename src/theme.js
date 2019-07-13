@@ -1,6 +1,7 @@
-import { brown, grey, deepOrange, deepPurple, red } from '@material-ui/core/colors';
+import { createMuiTheme } from '@material-ui/core/styles'
+import { deepOrange, deepPurple, red } from '@material-ui/core/colors'
 
-export default {
+const theme = createMuiTheme({
   palette: {
     type: 'light',
     primary: deepPurple,
@@ -12,7 +13,6 @@ export default {
       order: deepPurple[100],
     },
   },
-  typography: {
-    useNextVariants: true,
-  },
-}
+})
+
+export default theme
