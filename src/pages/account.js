@@ -41,7 +41,7 @@ const useStyles = makeStyles(theme => ({
   },
 }))
 
-const Account = (props) => {
+const Account = props => {
   const { authData } = props
   const classes = useStyles()
   const { title } = useSiteData()
