@@ -1,17 +1,17 @@
 import React from 'react'
-import { SiteData, Head } from 'react-static'
+import { Head, useSiteData } from 'react-static'
 //
 import AuthDataContext from '../session/AuthDataContext'
 import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth'
 import { auth, firebase } from '../firebase'
-import { withStyles } from '@material-ui/core/styles'
+import { makeStyles } from '@material-ui/styles'
 import Typography from '@material-ui/core/Typography'
 
-const styles = theme => ({
+const useStyles = makeStyles(theme => ({
   root: {
-    padding: theme.spacing.unit * 3,
+    padding: theme.spacing(3),
   },
-})
+}))
 
 const uiConfig = {
   signInFlow: 'popup',
@@ -52,30 +52,31 @@ const AccountMessage = ({ authData }) => {
      break
   }
   return (
-    <React.Fragment>
+    <>
       <Typography variant="h4" paragraph>{title}</Typography>
       <Typography variant="body2">{message}</Typography>
-    </React.Fragment>
+    </>
   )
 }
 
-export default withStyles(styles)(({ classes }) => (
-  <AuthDataContext.Consumer>
-    {
-      authData => (
-        <div className={classes.root}>
-          <SiteData>
-            {({title}) => (
-                <Head title={title} />
-            )}
-          </SiteData>
-          {authData.authUser ?
-            <AccountMessage authData={authData} />
-            :
-            <StyledFirebaseAuth uiConfig={uiConfig} firebaseAuth={auth} />
-          }
-        </div>
-      )
-    }
-  </AuthDataContext.Consumer>
-))
+export default props => {
+  const classes = useStyles()
+  const { title } = useSiteData()
+
+  return (
+    <AuthDataContext.Consumer>
+      {
+        authData => (
+          <div className={classes.root}>
+              <Head title={title} />
+            {authData.authUser ?
+              <AccountMessage authData={authData} />
+              :
+              <StyledFirebaseAuth uiConfig={uiConfig} firebaseAuth={auth} />
+            }
+          </div>
+        )
+      }
+    </AuthDataContext.Consumer>
+  )
+}
