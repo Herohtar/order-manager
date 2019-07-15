@@ -2,8 +2,6 @@ import React from 'react'
 //
 import withAuthorization from '../session/withAuthorization'
 
-const Admin = () => <div>Admin Page</div>
-
 const authCondition = async authUser => {
   if (!authUser) {
     return false;
@@ -13,4 +11,4 @@ const authCondition = async authUser => {
   return token.claims.admin === true;
 }
 
-export default withAuthorization(authCondition)(Admin)
+export default withAuthorization(authCondition)(() => <div>Admin Page</div>)

@@ -4,7 +4,7 @@ import { navigate } from '../components/Router'
 import AuthDataContext from './AuthDataContext'
 import { auth } from '../firebase'
 
-const withAuthorization = condition => Component => (
+export default condition => Component => (
   class WithAuthorization extends React.Component {
     componentDidMount () {
       this.unregisterAuthObserver = auth.onAuthStateChanged(async (authUser) => {
@@ -29,5 +29,3 @@ const withAuthorization = condition => Component => (
     }
   }
 )
-
-export default withAuthorization

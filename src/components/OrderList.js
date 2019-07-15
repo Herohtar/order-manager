@@ -1,6 +1,6 @@
 import React from 'react'
 //
-import { withStyles } from '@material-ui/core/styles'
+import { makeStyles } from '@material-ui/styles'
 import MenuList from '@material-ui/core/MenuList'
 import MenuItem from '@material-ui/core/MenuItem'
 import ListItemText from '@material-ui/core/ListItemText'
@@ -16,7 +16,7 @@ import green from '@material-ui/core/colors/green'
 import orange from '@material-ui/core/colors/orange'
 import { Flipper, Flipped } from 'react-flip-toolkit'
 
-const styles = theme => ({
+const useStyles = makeStyles(theme => ({
   viewed: {
     fontSize: 'inherit',
   },
@@ -24,50 +24,52 @@ const styles = theme => ({
     fontSize: 'inherit',
     fontWeight: 700,
   },
-})
+}))
 
-const handleDeleteClick = (onDeleteClick, order) => () => {
-  if (onDeleteClick) {
-    onDeleteClick(order)
+export default ({ orders, selectedOrder, onDeleteClick, onOrderClick }) => {
+  const classes = useStyles()
+
+  const handleDeleteClick = order => () => {
+    if (typeof onDeleteClick === 'function') {
+      onDeleteClick(order)
+    }
   }
-}
 
-const handleOrderClick = (onOrderClick, order) => () => {
-  if (onOrderClick) {
-    onOrderClick(order)
+  const handleOrderClick = order => () => {
+    if (typeof onOrderClick === 'function') {
+      onOrderClick(order)
+    }
   }
+
+  return (
+    <MenuList dense>
+      <Flipper flipKey={orders}>
+        {orders.map(order => (
+          <Flipped key={order.id} flipId={order.id}>
+            <MenuItem selected={!!selectedOrder && (selectedOrder.id === order.id)} onClick={handleOrderClick(order)}>
+              <Checkbox
+                checked={!order.viewed}
+                checkedIcon={<NewReleasesTwoToneIcon htmlColor={blue['A400']} />}
+                icon={<DoneIcon htmlColor={green['A700']} />}
+                indeterminateIcon={<PriorityHighIcon htmlColor={orange['A400']} />}
+                indeterminate={order.viewed && !order.completed}
+                disableRipple
+              />
+              <ListItemText
+                primary={order.name}
+                primaryTypographyProps={{className: order.viewed ? classes.viewed : classes.unviewed}}
+                secondary={order.email}
+                secondaryTypographyProps={{className: order.viewed ? classes.viewed : classes.unviewed}}
+              />
+              <ListItemSecondaryAction>
+                <IconButton onClick={handleDeleteClick(order)}>
+                  <DeleteTwoToneIcon />
+                </IconButton>
+              </ListItemSecondaryAction>
+            </MenuItem>
+          </Flipped>
+        ))}
+      </Flipper>
+    </MenuList>
+  )
 }
-
-const OrderList = ({ classes, orders, selectedOrder, onDeleteClick, onOrderClick }) => (
-  <MenuList dense>
-    <Flipper flipKey={orders}>
-      {orders.map(order => (
-        <Flipped key={order.id} flipId={order.id}>
-          <MenuItem selected={selectedOrder == order} onClick={handleOrderClick(onOrderClick, order)}>
-            <Checkbox
-              checked={!order.viewed}
-              checkedIcon={<NewReleasesTwoToneIcon nativeColor={blue['A400']} />}
-              icon={<DoneIcon nativeColor={green['A700']} />}
-              indeterminateIcon={<PriorityHighIcon nativeColor={orange['A400']} />}
-              indeterminate={order.viewed && !order.completed}
-              disableRipple
-            />
-            <ListItemText
-              primary={order.name}
-              primaryTypographyProps={{className: order.viewed ? classes.viewed : classes.unviewed}}
-              secondary={order.email}
-              secondaryTypographyProps={{className: order.viewed ? classes.viewed : classes.unviewed}}
-            />
-            <ListItemSecondaryAction>
-              <IconButton onClick={handleDeleteClick(onDeleteClick, order)}>
-                <DeleteTwoToneIcon />
-              </IconButton>
-            </ListItemSecondaryAction>
-          </MenuItem>
-        </Flipped>
-      ))}
-    </Flipper>
-  </MenuList>
-)
-
-export default withStyles(styles)(OrderList)

@@ -14,7 +14,7 @@ const cleanPath = path => path.replace(/\/$/, '') || '/'
 
 const getAvailableRoutes = authData => Object.values(routes).filter(route => route.condition(authData))
 
-const Navigation = () => (
+export default () => (
   <AuthDataContext.Consumer>
     {
       authData => (
@@ -36,5 +36,3 @@ const Navigation = () => (
     }
   </AuthDataContext.Consumer>
 )
-
-export default Navigation

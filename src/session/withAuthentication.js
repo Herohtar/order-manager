@@ -3,7 +3,7 @@ import React from 'react'
 import AuthDataContext from './AuthDataContext';
 import { auth, firestore } from '../firebase'
 
-const withAuthentication = Component => {
+export default Component => {
   class WithAuthentication extends React.Component {
     constructor (props) {
       super(props)
@@ -52,5 +52,3 @@ const withAuthentication = Component => {
 
   return WithAuthentication
 }
-
-export default withAuthentication
