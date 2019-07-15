@@ -36,7 +36,7 @@ const authCondition = async authUser => {
   return token.claims.hasAccess === true;
 }
 
-export default withAuthorization(authCondition)(props => {
+export default withAuthorization(authCondition)(() => {
   const classes = useStyles()
   const { title } = useSiteData()
   const [orders, setOrders] = useState([])
