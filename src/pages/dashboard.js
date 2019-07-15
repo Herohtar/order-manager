@@ -44,51 +44,57 @@ export default withAuthorization(authCondition)(props => {
   const [dialogOpen, setDialogOpen] = useState(false)
   const [dialogMessage, setDialogMessage] = useState('')
   const [orderToDelete, setOrderToDelete] = useState(null)
-
-  let setViewedTimeout = 0
+  const [viewedTimeout, setViewedTimeout] = useState(0)
 
   useEffect(() => {
     const handleOrdersChanged = snapshot => {
-      let newOrders = orders.slice()
-      snapshot.docChanges().forEach(change => {
-        switch (change.type) {
-          case "added":
-            let newOrder = { id: change.doc.id, ...change.doc.data() }
-            newOrders.splice(change.newIndex, 0, newOrder)
-            break
-          case "removed":
-            newOrders.splice(change.oldIndex, 1)
-            break
-          case "modified":
-            newOrders.splice(change.oldIndex, 1)
-            let modifiedOrder = { id: change.doc.id, ...change.doc.data() }
-            newOrders.splice(change.newIndex, 0, modifiedOrder)
-            break
-          default:
-            break
-        }
+      let newOrders = []
+      setOrders(orders => {
+        newOrders = orders.slice()
+        snapshot.docChanges().forEach(change => {
+          switch (change.type) {
+            case "added":
+              let newOrder = { id: change.doc.id, ...change.doc.data() }
+              newOrders.splice(change.newIndex, 0, newOrder)
+              break
+            case "removed":
+              newOrders.splice(change.oldIndex, 1)
+              break
+            case "modified":
+              newOrders.splice(change.oldIndex, 1)
+              let modifiedOrder = { id: change.doc.id, ...change.doc.data() }
+              newOrders.splice(change.newIndex, 0, modifiedOrder)
+              break
+            default:
+              break
+          }
+        })
+
+        return newOrders
       })
 
-      if (selectedOrder) {
-        setSelectedOrder(newOrders.find(order => order.id == selectedOrder.id) || null)
-      }
+      setSelectedOrder(selectedOrder => {
+        if (selectedOrder) {
+          return newOrders.find(order => order.id == selectedOrder.id) || null
+        }
 
-      setOrders(newOrders)
+        return null
+      })
     }
 
     const unsubscribeOrdersChanged = firestore.collection('orders').orderBy('date', 'desc').onSnapshot(handleOrdersChanged)
 
     return () => {
-      clearTimeout(setViewedTimeout)
+      setViewedTimeout(viewedTimeout => clearTimeout(viewedTimeout))
       unsubscribeOrdersChanged()
     }
-  })
+  }, [])
 
   const handleOrderClick = order => {
-    clearTimeout(setViewedTimeout)
+    clearTimeout(viewedTimeout)
 
     if (!order.viewed) {
-      setViewedTimeout = setTimeout(() => firestore.collection('orders').doc(order.id).update({ viewed: true }), 5000)
+      setViewedTimeout(setTimeout(() => firestore.collection('orders').doc(order.id).update({ viewed: true }), 5000))
     }
 
     setSelectedOrder(order)
