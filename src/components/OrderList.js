@@ -26,7 +26,7 @@ const useStyles = makeStyles(theme => ({
   },
 }))
 
-const OrderList = ({ orders, selectedOrder, onDeleteClick, onOrderClick }) => {
+export default ({ orders, selectedOrder, onDeleteClick, onOrderClick }) => {
   const classes = useStyles()
 
   const handleDeleteClick = order => () => {
@@ -73,5 +73,3 @@ const OrderList = ({ orders, selectedOrder, onDeleteClick, onOrderClick }) => {
     </MenuList>
   )
 }
-
-export default OrderList

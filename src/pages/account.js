@@ -41,8 +41,9 @@ const useStyles = makeStyles(theme => ({
   },
 }))
 
-const Account = props => {
-  const { authData } = props
+const authCondition = authUser => !!authUser
+
+export default withAuthorization(authCondition)(({ authData }) => {
   const classes = useStyles()
   const { title } = useSiteData()
   const [dialogOpen, setDialogOpen] = useState(false)
@@ -113,8 +114,4 @@ const Account = props => {
       <Snackbar anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }} open={error} onClose={handleClose} autoHideDuration={5000} message={errorMessage} action={<ErrorTwoToneIcon color="error" />} />
     </Grid>
   )
-}
-
-const authCondition = authUser => !!authUser
-
-export default withAuthorization(authCondition)(Account)
+})

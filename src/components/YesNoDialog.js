@@ -7,7 +7,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
-const YesNoDialog = ({ title, message, noText, yesText, open, onYes, onNo }) => (
+export default ({ title, message, noText, yesText, open, onYes, onNo }) => (
   <Dialog open={open}>
     <DialogTitle>{title}</DialogTitle>
     <DialogContent>
@@ -19,5 +19,3 @@ const YesNoDialog = ({ title, message, noText, yesText, open, onYes, onNo }) => 
     </DialogActions>
   </Dialog>
 )
-
-export default YesNoDialog

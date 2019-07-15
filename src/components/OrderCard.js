@@ -17,7 +17,7 @@ const useStyles = makeStyles(theme => ({
   },
 }))
 
-const OrderCard = ({ order, onToggleCompleted }) => {
+export default ({ order, onToggleCompleted }) => {
   const classes = useStyles()
   return (
     <Paper className={classes.root} square>
@@ -49,5 +49,3 @@ const OrderCard = ({ order, onToggleCompleted }) => {
     </Paper>
   )
 }
-
-export default OrderCard

@@ -13,7 +13,7 @@ const useStyles = makeStyles(theme => ({
   },
 }))
 
-const App = () => {
+export default withAuthentication(() => {
   const classes = useStyles()
 
   return (
@@ -31,6 +31,4 @@ const App = () => {
       </div>
     </Root>
   )
-}
-
-export default withAuthentication(App)
+})
