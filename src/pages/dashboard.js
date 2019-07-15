@@ -47,8 +47,9 @@ export default withAuthorization(authCondition)(() => {
   const [viewedTimeout, setViewedTimeout] = useState(0)
 
   useEffect(() => {
-    const handleOrdersChanged = snapshot => {
+    const unsubscribeOrdersChanged = firestore.collection('orders').orderBy('date', 'desc').onSnapshot(snapshot => {
       let newOrders = []
+
       setOrders(orders => {
         newOrders = orders.slice()
         snapshot.docChanges().forEach(change => {
@@ -74,15 +75,9 @@ export default withAuthorization(authCondition)(() => {
       })
 
       setSelectedOrder(selectedOrder => {
-        if (selectedOrder) {
-          return newOrders.find(order => order.id == selectedOrder.id) || null
-        }
-
-        return null
+        return selectedOrder && newOrders.find(order => order.id == selectedOrder.id) || null
       })
-    }
-
-    const unsubscribeOrdersChanged = firestore.collection('orders').orderBy('date', 'desc').onSnapshot(handleOrdersChanged)
+    })
 
     return () => {
       setViewedTimeout(viewedTimeout => clearTimeout(viewedTimeout))
