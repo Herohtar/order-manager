@@ -26,7 +26,17 @@ const useStyles = makeStyles(theme => ({
   },
 }))
 
-const Dashboard = props => {
+
+const authCondition = async authUser => {
+  if (!authUser) {
+    return false;
+  }
+
+  const token = await authUser.getIdTokenResult();
+  return token.claims.hasAccess === true;
+}
+
+export default withAuthorization(authCondition)(props => {
   const classes = useStyles()
   const { title } = useSiteData()
   const [orders, setOrders] = useState([])
@@ -127,15 +137,4 @@ const Dashboard = props => {
       <YesNoDialog open={dialogOpen} title="Delete order?" message={dialogMessage} onNo={handleNo} onYes={handleYes} />
     </div>
   )
-}
-
-const authCondition = async authUser => {
-  if (!authUser) {
-    return false;
-  }
-
-  const token = await authUser.getIdTokenResult();
-  return token.claims.hasAccess === true;
-}
-
-export default withAuthorization(authCondition)(Dashboard)
+})
