@@ -49,9 +49,9 @@ const OrderList = ({ orders, selectedOrder, onDeleteClick, onOrderClick }) => {
             <MenuItem selected={selectedOrder == order} onClick={handleOrderClick(onOrderClick, order)}>
               <Checkbox
                 checked={!order.viewed}
-                checkedIcon={<NewReleasesTwoToneIcon nativeColor={blue['A400']} />}
-                icon={<DoneIcon nativeColor={green['A700']} />}
-                indeterminateIcon={<PriorityHighIcon nativeColor={orange['A400']} />}
+                checkedIcon={<NewReleasesTwoToneIcon htmlColor={blue['A400']} />}
+                icon={<DoneIcon htmlColor={green['A700']} />}
+                indeterminateIcon={<PriorityHighIcon htmlColor={orange['A400']} />}
                 indeterminate={order.viewed && !order.completed}
                 disableRipple
               />
