@@ -46,7 +46,7 @@ const OrderList = ({ orders, selectedOrder, onDeleteClick, onOrderClick }) => {
       <Flipper flipKey={orders}>
         {orders.map(order => (
           <Flipped key={order.id} flipId={order.id}>
-            <MenuItem selected={selectedOrder == order} onClick={handleOrderClick(onOrderClick, order)}>
+            <MenuItem selected={!!selectedOrder && (selectedOrder.id === order.id)} onClick={handleOrderClick(onOrderClick, order)}>
               <Checkbox
                 checked={!order.viewed}
                 checkedIcon={<NewReleasesTwoToneIcon htmlColor={blue['A400']} />}
