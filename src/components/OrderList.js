@@ -26,27 +26,27 @@ const useStyles = makeStyles(theme => ({
   },
 }))
 
-const handleDeleteClick = (onDeleteClick, order) => () => {
-  if (onDeleteClick) {
-    onDeleteClick(order)
-  }
-}
-
-const handleOrderClick = (onOrderClick, order) => () => {
-  if (onOrderClick) {
-    onOrderClick(order)
-  }
-}
-
 const OrderList = ({ orders, selectedOrder, onDeleteClick, onOrderClick }) => {
   const classes = useStyles()
+
+  const handleDeleteClick = order => () => {
+    if (typeof onDeleteClick === 'function') {
+      onDeleteClick(order)
+    }
+  }
+
+  const handleOrderClick = order => () => {
+    if (typeof onOrderClick === 'function') {
+      onOrderClick(order)
+    }
+  }
 
   return (
     <MenuList dense>
       <Flipper flipKey={orders}>
         {orders.map(order => (
           <Flipped key={order.id} flipId={order.id}>
-            <MenuItem selected={!!selectedOrder && (selectedOrder.id === order.id)} onClick={handleOrderClick(onOrderClick, order)}>
+            <MenuItem selected={!!selectedOrder && (selectedOrder.id === order.id)} onClick={handleOrderClick(order)}>
               <Checkbox
                 checked={!order.viewed}
                 checkedIcon={<NewReleasesTwoToneIcon htmlColor={blue['A400']} />}
@@ -62,7 +62,7 @@ const OrderList = ({ orders, selectedOrder, onDeleteClick, onOrderClick }) => {
                 secondaryTypographyProps={{className: order.viewed ? classes.viewed : classes.unviewed}}
               />
               <ListItemSecondaryAction>
-                <IconButton onClick={handleDeleteClick(onDeleteClick, order)}>
+                <IconButton onClick={handleDeleteClick(order)}>
                   <DeleteTwoToneIcon />
                 </IconButton>
               </ListItemSecondaryAction>
