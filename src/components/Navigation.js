@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useContext } from 'react'
 //
 import { Location, Link } from './Router'
 import AuthDataContext from '../session/AuthDataContext'
@@ -14,25 +14,22 @@ const cleanPath = path => path.replace(/\/$/, '') || '/'
 
 const getAvailableRoutes = authData => Object.values(routes).filter(route => route.condition(authData))
 
-export default () => (
-  <AuthDataContext.Consumer>
-    {
-      authData => (
-        <Location>
-          {({ location }) => {
-            const availableRoutes = getAvailableRoutes(authData)
-            const routeIndex = availableRoutes.findIndex(route => route.path === cleanPath(location.pathname))
+export default () => {
+  const authData = useContext(AuthDataContext)
+  return (
+    <Location>
+      {({ location }) => {
+        const availableRoutes = getAvailableRoutes(authData)
+        const routeIndex = availableRoutes.findIndex(route => route.path === cleanPath(location.pathname))
 
-            return (
-              <Tabs value={(routeIndex >= 0) ? routeIndex : false} component="nav">
-                {availableRoutes.map(({ path, label }, index) => (
-                  <Tab key={index} component={Link} value={index} to={path} label={label} />
-                ))}
-              </Tabs>
-            )
-          }}
-        </Location>
-      )
-    }
-  </AuthDataContext.Consumer>
-)
+        return (
+          <Tabs value={(routeIndex >= 0) ? routeIndex : false} component="nav">
+            {availableRoutes.map(({ path, label }, index) => (
+              <Tab key={index} component={Link} value={index} to={path} label={label} />
+            ))}
+          </Tabs>
+        )
+      }}
+    </Location>
+  )
+}

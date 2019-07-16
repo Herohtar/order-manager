@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { Head, useSiteData } from 'react-static'
 //
 import AuthDataContext from '../session/AuthDataContext'
@@ -62,21 +62,16 @@ const AccountMessage = ({ authData }) => {
 export default props => {
   const classes = useStyles()
   const { title } = useSiteData()
+  const authData = useContext(AuthDataContext)
 
   return (
-    <AuthDataContext.Consumer>
-      {
-        authData => (
-          <div className={classes.root}>
-              <Head title={title} />
-            {authData.authUser ?
-              <AccountMessage authData={authData} />
-              :
-              <StyledFirebaseAuth uiConfig={uiConfig} firebaseAuth={auth} />
-            }
-          </div>
-        )
+    <div className={classes.root}>
+        <Head title={title} />
+      {authData.authUser ?
+        <AccountMessage authData={authData} />
+        :
+        <StyledFirebaseAuth uiConfig={uiConfig} firebaseAuth={auth} />
       }
-    </AuthDataContext.Consumer>
+    </div>
   )
 }
