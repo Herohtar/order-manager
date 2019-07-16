@@ -57,7 +57,7 @@ export default withAuthorization(authCondition)(({ authData }) => {
     })
 
     return () => unsubscribeUserChanged()
-  })
+  }, [])
 
   const handleClose = (event, reason) => {
     if (reason === 'clickaway') {
