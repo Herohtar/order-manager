@@ -1,31 +1,21 @@
-import React from 'react'
+import React, { useEffect, useContext } from 'react'
 //
 import { navigate } from '../components/Router'
 import AuthDataContext from './AuthDataContext'
 import { auth } from '../firebase'
 
-export default condition => Component => (
-  class WithAuthorization extends React.Component {
-    componentDidMount () {
-      this.unregisterAuthObserver = auth.onAuthStateChanged(async (authUser) => {
-        if (!(await condition(authUser))) {
-          navigate('/', { replace: true })
-        }
-      })
-    }
+export default condition => Component => props => {
+  const authData = useContext(AuthDataContext)
 
-    componentWillUnmount() {
-      this.unregisterAuthObserver()
-    }
+  useEffect(() => {
+    const unregisterAuthObserver = auth.onAuthStateChanged(async (authUser) => {
+      if (!(await condition(authUser))) {
+        navigate('/', { replace: true })
+      }
+    })
 
-    render () {
-      return (
-        <AuthDataContext.Consumer>
-          {
-            authData => authData.authUser ? <Component authData={authData} {...this.props} /> : null
-          }
-        </AuthDataContext.Consumer>
-      )
-    }
-  }
-)
+    return () => unregisterAuthObserver()
+  }, [])
+
+  return authData.authUser ? <Component authData={authData} {...props} /> : null
+}
