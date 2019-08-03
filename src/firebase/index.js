@@ -9,6 +9,7 @@ const prodConfig = {
   projectId: "grammys-gluten-free-goodies",
   storageBucket: "grammys-gluten-free-goodies.appspot.com",
   messagingSenderId: "509212001531",
+  appId: "1:509212001531:web:3c1ee198caa56030"
 }
 
 const devConfig = {
@@ -18,6 +19,7 @@ const devConfig = {
   projectId: "grammys-gluten-free-goodies",
   storageBucket: "grammys-gluten-free-goodies.appspot.com",
   messagingSenderId: "509212001531",
+  appId: "1:509212001531:web:3c1ee198caa56030"
 }
 
 const config = process.env.NODE_ENV === 'production'
