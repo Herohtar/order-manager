@@ -1,5 +1,14 @@
 {
   "projects": {
     "default": "grammys-gluten-free-goodies"
+  },
+  "targets": {
+    "grammys-gluten-free-goodies": {
+      "hosting": {
+        "orders": [
+          "order-manager"
+        ]
+      }
+    }
   }
 }
