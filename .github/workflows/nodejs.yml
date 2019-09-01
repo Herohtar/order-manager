@@ -38,3 +38,10 @@ jobs:
       env:
         FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
       if: success() && (github.event_name != 'pull_request')
+
+    - name: Upload Artifacts
+      uses: actions/upload-artifact@master
+      with:
+        name: dist
+        path: dist
+      if: success() && (github.event_name != 'pull_request')
